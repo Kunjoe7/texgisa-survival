@@ -584,8 +584,9 @@ class TEXGISAModel(BaseSurvivalModel):
         if not hasattr(self, 'texgi_explainer'):
             raise ValueError("TEXGI explainer not initialized. Model may not have been trained properly.")
 
-        # Use stored training data sample
-        X_sample = self.training_data_sample.to(self.device)
+        # Use stored training data sample, but match the explainer's batch size
+        explainer_batch_size = self.texgi_explainer.batch_size
+        X_sample = self.training_data_sample[:explainer_batch_size].to(self.device)
 
         # Create a wrapper that converts model output to list format expected by TEXGI
         class ModelWrapper(nn.Module):
@@ -603,19 +604,31 @@ class TEXGISAModel(BaseSurvivalModel):
         wrapped_model = ModelWrapper(self.model, self.num_time_bins)
         wrapped_model.eval()
 
-        # Compute TEXGI attributions
-        with torch.no_grad():
+        # Compute TEXGI attributions in batches to get more stable estimates
+        all_attributions = []
+        num_batches = min(5, len(self.training_data_sample) // explainer_batch_size)
+
+        for batch_idx in range(num_batches):
+            start_idx = batch_idx * explainer_batch_size
+            end_idx = start_idx + explainer_batch_size
+            X_batch = self.training_data_sample[start_idx:end_idx].to(self.device)
+
+            # Note: TEXGI needs gradients, so we don't use torch.no_grad() here
             attributions_list = self.texgi_explainer.compute_attributions(
                 model=wrapped_model,
-                input_tensor=X_sample,
+                input_tensor=X_batch,
                 sparse_labels=None
             )
 
-        # Average across time bins
-        avg_attributions = sum(attributions_list) / len(attributions_list)
+            # Average across time bins for this batch
+            avg_attributions = sum(attributions_list) / len(attributions_list)
+            all_attributions.append(avg_attributions.detach())
+
+        # Concatenate all batches
+        all_attributions = torch.cat(all_attributions, dim=0)
 
         # Convert to numpy and compute statistics
-        avg_attributions_np = avg_attributions.cpu().numpy()
+        avg_attributions_np = all_attributions.cpu().numpy()
 
         # Compute mean and std across samples
         importance = np.abs(avg_attributions_np).mean(axis=0)
@@ -695,6 +708,13 @@ class TEXGISAModel(BaseSurvivalModel):
     
     def _get_model_config(self) -> Dict[str, Any]:
         """Get model configuration for saving."""
+        import pickle
+
+        # Serialize scaler
+        scaler_bytes = None
+        if hasattr(self.scaler, 'mean_'):  # Check if scaler is fitted
+            scaler_bytes = pickle.dumps(self.scaler)
+
         return {
             'hidden_layers': self.hidden_layers,
             'num_time_bins': self.num_time_bins,
@@ -705,11 +725,14 @@ class TEXGISAModel(BaseSurvivalModel):
             'ig_steps': self.ig_steps,
             'expert_rules': self.expert_rules,
             'feature_names': self.feature_names,
-            'time_bins': self.time_bins.tolist() if self.time_bins is not None else None
+            'time_bins': self.time_bins.tolist() if self.time_bins is not None else None,
+            'scaler': scaler_bytes
         }
     
     def _create_model_from_config(self, config: Dict[str, Any]) -> None:
         """Create model from configuration."""
+        import pickle
+
         input_dim = len(config.get('feature_names', []))
         if input_dim > 0:
             self.model = MultiTaskSurvivalNet(
@@ -727,6 +750,12 @@ class TEXGISAModel(BaseSurvivalModel):
             self.feature_names = config.get('feature_names', [])
             if 'time_bins' in config and config['time_bins']:
                 self.time_bins = np.array(config['time_bins'])
+
+            # Restore scaler
+            if 'scaler' in config and config['scaler'] is not None:
+                self.scaler = pickle.loads(config['scaler'])
+            else:
+                self.scaler = StandardScaler()
 
     def _get_feature_index(self, feature):
         """Get feature index from name or integer index."""
