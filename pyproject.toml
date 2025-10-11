@@ -1,0 +1,196 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "texgisa-survival"
+version = "1.0.0"
+description = "A comprehensive deep learning library for survival analysis with interpretable AI"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "DHAI Lab", email = "texgisa-survival@example.com"},
+]
+maintainers = [
+    {name = "DHAI Lab", email = "texgisa-survival@example.com"},
+]
+keywords = [
+    "survival-analysis",
+    "deep-learning",
+    "machine-learning",
+    "interpretable-ai",
+    "time-to-event",
+    "cox-regression",
+    "pytorch",
+    "healthcare",
+    "biostatistics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Environment :: GPU :: NVIDIA CUDA",
+]
+
+dependencies = [
+    "numpy>=1.19.0,<2.0.0",
+    "pandas>=1.2.0",
+    "scikit-learn>=0.24.0",
+    "torch>=1.9.0",
+    "matplotlib>=3.3.0",
+    "seaborn>=0.11.0",
+    "lifelines>=0.25.0",
+    "pycox>=0.2.0",
+    "torchtuples>=0.2.0",
+    "joblib>=1.0.0",
+    "tqdm>=4.60.0",
+    "scipy>=1.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=0.990",
+    "isort>=5.10.0",
+    "pre-commit>=2.20.0",
+    "coverage[toml]>=6.5",
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "nbsphinx>=0.8.0",
+    "sphinx-autodoc-typehints>=1.19.0",
+    "myst-parser>=0.18.0",
+]
+examples = [
+    "jupyter>=1.0.0",
+    "notebook>=6.4.0",
+    "ipywidgets>=7.6.0",
+]
+all = [
+    "texgisa-survival[dev,docs,examples]",
+]
+
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/texgisa-survival"
+Documentation = "https://texgisa-survival.readthedocs.io"
+Repository = "https://github.com/YOUR_USERNAME/texgisa-survival"
+Issues = "https://github.com/YOUR_USERNAME/texgisa-survival/issues"
+Changelog = "https://github.com/YOUR_USERNAME/texgisa-survival/blob/main/CHANGELOG.md"
+
+[project.scripts]
+texgisa-survival = "texgisa_survival.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["texgisa_survival*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.yaml", "*.yml"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--cov=texgisa_survival",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-branch",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "gpu: marks tests that require GPU",
+    "integration: marks integration tests",
+]
+
+[tool.coverage.run]
+source = ["src/texgisa_survival"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+precision = 2
+show_missing = true
+
+[tool.coverage.html]
+directory = "htmlcov"
