@@ -12,9 +12,9 @@ import torch
 import torch.nn as nn
 from sklearn.metrics import roc_auc_score
 
-from .texgi import TEXGIExplainer as TEXGI_Core
+from .texgi import TEXGIExplainer as TEXGIExplainer
 
-# Keep existing TEXGI explainer implementation
+# Keep legacy TEXGI explainer implementation for backward compatibility
 class TEXGIExplainer_Old:
     """
     Time-dependent EXtreme Gradient Integration for survival models.

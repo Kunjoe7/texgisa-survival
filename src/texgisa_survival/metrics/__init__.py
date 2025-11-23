@@ -11,161 +11,213 @@ from lifelines.utils import concordance_index as lifelines_concordance_index
 
 
 def concordance_index(time: np.ndarray,
-                     event: np.ndarray,
                      predicted_scores: np.ndarray,
+                     event: np.ndarray,
                      tied_tol: float = 1e-8) -> float:
     """
     Calculate Harrell's concordance index (C-index).
-    
-    The C-index measures the probability that, for a pair of randomly chosen 
-    comparable samples, the sample with the higher risk score experiences an 
+
+    The C-index measures the probability that, for a pair of randomly chosen
+    comparable samples, the sample with the higher risk score experiences an
     event before the sample with the lower risk score.
-    
+
     Parameters
     ----------
     time : np.ndarray
         Observed survival times
-    event : np.ndarray
-        Event indicators (1 if event occurred, 0 if censored)
     predicted_scores : np.ndarray
         Predicted risk scores (higher score = higher risk)
+    event : np.ndarray
+        Event indicators (1 if event occurred, 0 if censored)
     tied_tol : float
         Tolerance for considering scores as tied
-        
+
     Returns
     -------
     c_index : float
         Concordance index between 0 and 1 (higher is better)
     """
-    return lifelines_concordance_index(time, -predicted_scores, event)
+    # Convert to numpy arrays if needed
+    time = np.asarray(time)
+    predicted_scores = np.asarray(predicted_scores)
+    event = np.asarray(event)
+
+    # Validate input lengths
+    if not (len(time) == len(predicted_scores) == len(event)):
+        raise ValueError("time, predicted_scores, and event must have the same length")
+
+    # lifelines expects: higher score = longer survival time (positive correlation)
+    # Our API: predicted_scores represent expected survival time (higher = longer survival)
+    return lifelines_concordance_index(time, predicted_scores, event)
 
 
 def brier_score(time: np.ndarray,
-               event: np.ndarray,
                survival_probs: np.ndarray,
-               eval_times: np.ndarray) -> float:
+               event: np.ndarray,
+               time_point: float = None,
+               eval_times: np.ndarray = None) -> float:
     """
     Calculate time-dependent Brier score.
-    
-    The Brier score measures the mean squared difference between predicted 
+
+    The Brier score measures the mean squared difference between predicted
     survival probabilities and the observed survival status.
-    
+
     Parameters
     ----------
     time : np.ndarray of shape (n_samples,)
         Observed survival times
+    survival_probs : np.ndarray of shape (n_samples,) or (n_samples, n_times)
+        Predicted survival probabilities
     event : np.ndarray of shape (n_samples,)
         Event indicators
-    survival_probs : np.ndarray of shape (n_samples, n_times)
-        Predicted survival probabilities
-    eval_times : np.ndarray of shape (n_times,)
+    time_point : float, optional
+        Single time point at which to evaluate (for backward compatibility)
+    eval_times : np.ndarray of shape (n_times,), optional
         Times at which to evaluate the score
-        
+
     Returns
     -------
     brier : float
         Mean Brier score across all time points (lower is better)
     """
-    n_samples = len(time)
+    time = np.asarray(time)
+    survival_probs = np.asarray(survival_probs)
+    event = np.asarray(event)
+
+    # Handle single time point evaluation
+    if time_point is not None:
+        # Single time point evaluation
+        weights = _calculate_ipcw_weights(time, event, time_point)
+        observed = (time > time_point).astype(float)
+        if survival_probs.ndim == 1:
+            predicted = survival_probs
+        else:
+            predicted = survival_probs[:, 0]
+        return float(np.mean(weights * (observed - predicted) ** 2))
+
+    # Multiple time points
+    if eval_times is None:
+        eval_times = np.sort(np.unique(time[event == 1]))
+
     n_times = len(eval_times)
     scores = np.zeros(n_times)
-    
+
     for t_idx, t in enumerate(eval_times):
-        # Calculate weights using Kaplan-Meier for censoring
         weights = _calculate_ipcw_weights(time, event, t)
-        
-        # Calculate Brier score at time t
         observed = (time > t).astype(float)
-        predicted = survival_probs[:, t_idx]
-        
+
+        if survival_probs.ndim == 1:
+            predicted = survival_probs
+        elif t_idx < survival_probs.shape[1]:
+            predicted = survival_probs[:, t_idx]
+        else:
+            predicted = survival_probs[:, -1]
+
         scores[t_idx] = np.mean(weights * (observed - predicted) ** 2)
-    
-    return np.mean(scores)
+
+    return float(np.mean(scores))
 
 
 def integrated_brier_score(time: np.ndarray,
-                         event: np.ndarray,
                          survival_probs: np.ndarray,
+                         event: np.ndarray,
                          eval_times: Optional[np.ndarray] = None) -> float:
     """
     Calculate integrated Brier score (IBS).
-    
+
     The IBS integrates the time-dependent Brier score over time.
-    
+
     Parameters
     ----------
     time : np.ndarray
         Observed survival times
-    event : np.ndarray
-        Event indicators
     survival_probs : np.ndarray
         Predicted survival probabilities
+    event : np.ndarray
+        Event indicators
     eval_times : np.ndarray, optional
         Times at which to evaluate. If None, uses observed event times.
-        
+
     Returns
     -------
     ibs : float
         Integrated Brier score (lower is better)
     """
+    time = np.asarray(time)
+    survival_probs = np.asarray(survival_probs)
+    event = np.asarray(event)
+
     if eval_times is None:
         eval_times = np.sort(np.unique(time[event == 1]))
-        
+    else:
+        eval_times = np.asarray(eval_times)
+
+    if len(eval_times) < 2:
+        # Single time point - just return the Brier score
+        return brier_score(time, survival_probs, event, time_point=eval_times[0] if len(eval_times) == 1 else time.mean())
+
     scores = []
     for t_idx, t in enumerate(eval_times):
         weights = _calculate_ipcw_weights(time, event, t)
         observed = (time > t).astype(float)
-        
-        if t_idx < survival_probs.shape[1]:
+
+        if survival_probs.ndim == 1:
+            predicted = survival_probs
+        elif t_idx < survival_probs.shape[1]:
             predicted = survival_probs[:, t_idx]
         else:
-            # Extrapolate if needed
             predicted = survival_probs[:, -1]
-            
+
         score_t = np.mean(weights * (observed - predicted) ** 2)
         scores.append(score_t)
-    
+
     # Integrate using trapezoidal rule
+    scores = np.array(scores)
     dt = np.diff(eval_times)
     ibs = np.sum(0.5 * (scores[:-1] + scores[1:]) * dt) / (eval_times[-1] - eval_times[0])
-    
-    return ibs
+
+    return float(ibs)
 
 
 def cumulative_dynamic_auc(time: np.ndarray,
-                          event: np.ndarray,
                           risk_scores: np.ndarray,
-                          eval_times: np.ndarray) -> float:
+                          event: np.ndarray,
+                          eval_times: np.ndarray) -> np.ndarray:
     """
     Calculate cumulative/dynamic AUC for survival analysis.
-    
+
     Parameters
     ----------
     time : np.ndarray
         Observed survival times
-    event : np.ndarray
-        Event indicators
     risk_scores : np.ndarray
         Predicted risk scores
+    event : np.ndarray
+        Event indicators
     eval_times : np.ndarray
         Times at which to evaluate AUC
-        
+
     Returns
     -------
-    mean_auc : float
-        Mean AUC across time points
+    aucs : np.ndarray
+        AUC values at each time point
     """
     from sklearn.metrics import roc_auc_score
-    
+
+    time = np.asarray(time)
+    risk_scores = np.asarray(risk_scores)
+    event = np.asarray(event)
+    eval_times = np.asarray(eval_times)
+
     aucs = []
     for t in eval_times:
         # Define binary outcome at time t
         # Case: experienced event before t
         # Control: survived beyond t or censored after t
-        
+
         mask_case = (time <= t) & (event == 1)
         mask_control = time > t
-        
+
         if mask_case.sum() > 0 and mask_control.sum() > 0:
             y_binary = np.concatenate([
                 np.ones(mask_case.sum()),
@@ -175,14 +227,16 @@ def cumulative_dynamic_auc(time: np.ndarray,
                 risk_scores[mask_case],
                 risk_scores[mask_control]
             ])
-            
+
             try:
                 auc_t = roc_auc_score(y_binary, scores_binary)
                 aucs.append(auc_t)
-            except:
-                pass
-    
-    return np.mean(aucs) if aucs else 0.5
+            except Exception:
+                aucs.append(0.5)
+        else:
+            aucs.append(0.5)
+
+    return np.array(aucs)
 
 
 def _calculate_ipcw_weights(time: np.ndarray,
