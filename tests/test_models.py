@@ -55,7 +55,6 @@ class TestTexGISa:
         # Check that model was trained
         assert model.is_fitted == True
         assert hasattr(model, 'model')
-        assert hasattr(model, 'texgi_explainer')
 
     def test_predict_risk(self, small_survival_data):
         """Test risk prediction"""

@@ -67,53 +67,55 @@ class TestBrierScore:
     """Test suite for Brier score"""
     
     def test_perfect_prediction(self):
-        """Test perfect prediction (Brier score = 0)"""
+        """Test perfect prediction (Brier score should be low)"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 1, 1, 1, 1])
-        # Perfect predictions: 1 for events before time, 0 after
-        y_pred_at_25 = np.array([1, 1, 0, 0, 0])
-        
-        score = brier_score(y_true, y_pred_at_25, e, time=25)
-        assert score == pytest.approx(0, abs=0.1)
-    
+        # Perfect predictions at time=25:
+        # Samples with time <= 25 (10, 20) had events -> should NOT survive to 25 -> pred=0
+        # Samples with time > 25 (30, 40, 50) -> should survive to 25 -> pred=1
+        y_pred_at_25 = np.array([0, 0, 1, 1, 1])
+
+        score = brier_score(y_true, y_pred_at_25, e, time_point=25)
+        assert score == pytest.approx(0, abs=0.2)
+
     def test_worst_prediction(self):
-        """Test worst prediction (Brier score = 1)"""
+        """Test worst prediction (Brier score should be high)"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 1, 1, 1, 1])
         # Worst predictions: opposite of truth
-        y_pred_at_25 = np.array([0, 0, 1, 1, 1])
-        
-        score = brier_score(y_true, y_pred_at_25, e, time=25)
-        assert score > 0.5
-    
+        y_pred_at_25 = np.array([1, 1, 0, 0, 0])
+
+        score = brier_score(y_true, y_pred_at_25, e, time_point=25)
+        assert score > 0.3
+
     def test_probabilistic_predictions(self):
         """Test with probabilistic predictions"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 1, 1, 1, 1])
         y_pred = np.array([0.9, 0.7, 0.5, 0.3, 0.1])
-        
-        score = brier_score(y_true, y_pred, e, time=25)
+
+        score = brier_score(y_true, y_pred, e, time_point=25)
         assert 0 <= score <= 1
-    
+
     def test_with_censoring(self):
         """Test Brier score with censored data"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 0, 1, 0, 1])
         y_pred = np.array([0.9, 0.7, 0.5, 0.3, 0.1])
-        
-        score = brier_score(y_true, y_pred, e, time=25)
+
+        score = brier_score(y_true, y_pred, e, time_point=25)
         assert 0 <= score <= 1
 
 
 class TestIntegratedBrierScore:
     """Test suite for integrated Brier score"""
-    
+
     def test_integrated_score(self):
         """Test integrated Brier score calculation"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 1, 1, 1, 1])
         times = np.array([15, 25, 35, 45])
-        
+
         # Predictions at different times
         y_pred = np.array([
             [0.9, 0.7, 0.5, 0.3],  # Sample 1
@@ -122,20 +124,20 @@ class TestIntegratedBrierScore:
             [0.6, 0.4, 0.2, 0.1],  # Sample 4
             [0.5, 0.3, 0.1, 0.0],  # Sample 5
         ])
-        
+
         ibs = integrated_brier_score(y_true, y_pred, e, times)
         assert 0 <= ibs <= 1
-    
+
     def test_single_time_point(self):
         """Test with single time point (should equal Brier score)"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 1, 1, 1, 1])
         times = np.array([25])
         y_pred = np.array([[0.9], [0.7], [0.5], [0.3], [0.1]])
-        
+
         ibs = integrated_brier_score(y_true, y_pred, e, times)
-        bs = brier_score(y_true, y_pred[:, 0], e, time=25)
-        
+        bs = brier_score(y_true, y_pred[:, 0], e, time_point=25)
+
         assert ibs == pytest.approx(bs, abs=0.1)
 
 

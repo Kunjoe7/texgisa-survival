@@ -176,8 +176,11 @@ class TexGISa:
         if self.expert_rules:
             kwargs['expert_rules'] = {'rules': self.expert_rules}
 
+        # Handle verbose parameter - allow override from kwargs
+        verbose = kwargs.pop('verbose', self.verbose)
+
         # Train the model
-        if self.verbose:
+        if verbose:
             print(f"Training TexGISa model...")
 
         self.model.fit(
@@ -188,7 +191,7 @@ class TexGISa:
             learning_rate=learning_rate,
             early_stopping=early_stopping,
             patience=patience,
-            verbose=self.verbose,
+            verbose=verbose,
             **kwargs
         )
 
@@ -282,11 +285,17 @@ class TexGISa:
         >>> model.add_expert_rule('treatment_A', '==', 1, sign='-1', weight=2.0)
         >>> model.add_expert_rule('biomarker', '>', 0.5, sign='+1')
         """
+        # Convert sign to integer
+        if isinstance(sign, str):
+            sign_int = 1 if sign == '+1' else -1
+        else:
+            sign_int = 1 if sign > 0 else -1
+
         rule = {
             'feature': feature,
             'relation': relation,
             'threshold': threshold,
-            'sign': 1 if sign == '+1' else -1,
+            'sign': sign_int,
             'weight': weight,
             'min_magnitude': min_magnitude
         }
