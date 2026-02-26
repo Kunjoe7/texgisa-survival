@@ -12,11 +12,9 @@ joblib>=1.0.0
 
 # Deep Learning
 torch>=1.9.0
-torchtuples>=0.2.0
 
 # Survival Analysis
 lifelines>=0.25.0
-pycox>=0.2.0
 
 # Visualization
 matplotlib>=3.3.0

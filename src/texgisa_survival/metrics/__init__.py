@@ -310,6 +310,65 @@ def log_rank_test(time1: np.ndarray,
     return result.test_statistic, result.p_value
 
 
+def kaplan_meier_estimator(
+    durations: np.ndarray,
+    events: np.ndarray,
+    limit_to_last_event: bool = True,
+    bin_width: float = 0,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Compute a Kaplan-Meier survival curve (pure numpy, no lifelines).
+
+    Parameters
+    ----------
+    durations : np.ndarray
+        Observed survival / follow-up times.
+    events : np.ndarray
+        Event indicators (1 = event, 0 = censored).
+    limit_to_last_event : bool
+        If *True*, truncate the timeline at the last observed event time.
+    bin_width : float
+        When > 0, bucket times into bins of this width before estimation.
+
+    Returns
+    -------
+    times : np.ndarray
+        Time coordinates of the step-function nodes (starts at 0).
+    survival_probs : np.ndarray
+        Corresponding survival probabilities.
+    """
+    d = np.asarray(durations, dtype=float)
+    e = np.asarray(events, dtype=int)
+
+    if bin_width and bin_width > 0:
+        d = (np.floor(d / bin_width) * bin_width).astype(float)
+
+    if limit_to_last_event and (e == 1).any():
+        t_last = d[e == 1].max()
+        keep = d <= t_last
+        d, e = d[keep], e[keep]
+
+    order = np.argsort(d)
+    d, e = d[order], e[order]
+
+    uniq = np.unique(d)
+    n_at_risk = len(d)
+    S = 1.0
+    t_nodes = [0.0]
+    S_nodes = [1.0]
+
+    for t in uniq:
+        at_t = d == t
+        m = at_t.sum()
+        d_events = (e[at_t] == 1).sum()
+        if d_events > 0 and n_at_risk > 0:
+            S = S * (1.0 - d_events / n_at_risk)
+            t_nodes.append(float(t))
+            S_nodes.append(float(S))
+        n_at_risk -= m
+
+    return np.array(t_nodes), np.array(S_nodes)
+
+
 def calibration_slope(predicted_risk: np.ndarray,
                      observed_risk: np.ndarray,
                      n_bins: int = 10) -> float:

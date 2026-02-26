@@ -13,6 +13,13 @@ import torch.nn as nn
 from sklearn.metrics import roc_auc_score
 
 from .texgi import TEXGIExplainer as TEXGIExplainer
+from .counterfactual import (
+    CounterfactualExplainer,
+    CFResult,
+    TexgiCFResult,
+    generate_cf_from_arrays,
+    generate_texgi_counterfactuals,
+)
 
 # Keep legacy TEXGI explainer implementation for backward compatibility
 class TEXGIExplainer_Old:

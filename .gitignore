@@ -176,6 +176,7 @@ $RECYCLE.BIN/
 *.h5
 *.hdf5
 data/
+!src/texgisa_survival/data/
 datasets/
 checkpoints/
 runs/

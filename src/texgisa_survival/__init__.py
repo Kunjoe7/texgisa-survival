@@ -9,8 +9,8 @@ knowledge integration and time-dependent feature importance.
 """
 
 from .api import TexGISa, load_model
-from .data import SurvivalDataset
-from .metrics import concordance_index, brier_score, integrated_brier_score
+from .data import SurvivalDataset, DataManager
+from .metrics import concordance_index, brier_score, integrated_brier_score, kaplan_meier_estimator
 from .diagnostics import (
     brier_score_discrete,
     calibration_by_quantile,
@@ -32,6 +32,20 @@ from .texgi_utils import (
     standardize_features,
     destandardize_features,
 )
+from .explainers.counterfactual import (
+    CounterfactualExplainer,
+    CFResult,
+    TexgiCFResult,
+    generate_cf_from_arrays,
+    generate_texgi_counterfactuals,
+)
+
+# Optional baseline models (require pycox)
+try:
+    from .models.baselines import CoxTimeModel, DeepSurvModel, DeepHitModel
+    _has_baselines = True
+except ImportError:
+    _has_baselines = False
 
 # Optional preprocessing modules
 try:
@@ -40,17 +54,19 @@ try:
 except ImportError:
     _has_preprocessing = False
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 __all__ = [
     # Main API
     "TexGISa",
     "load_model",
     "SurvivalDataset",
+    "DataManager",
     # Metrics
     "concordance_index",
     "brier_score",
     "integrated_brier_score",
+    "kaplan_meier_estimator",
     # Diagnostics
     "brier_score_discrete",
     "calibration_by_quantile",
@@ -70,7 +86,16 @@ __all__ = [
     "texgi_time_series",
     "standardize_features",
     "destandardize_features",
+    # Counterfactual explanations
+    "CounterfactualExplainer",
+    "CFResult",
+    "TexgiCFResult",
+    "generate_cf_from_arrays",
+    "generate_texgi_counterfactuals",
 ]
+
+if _has_baselines:
+    __all__.extend(["CoxTimeModel", "DeepSurvModel", "DeepHitModel"])
 
 if _has_preprocessing:
     __all__.append("TabularProcessor")

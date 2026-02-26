@@ -33,8 +33,6 @@ else:
         "matplotlib>=3.3.0",
         "seaborn>=0.11.0",
         "lifelines>=0.25.0",
-        "pycox>=0.2.0",
-        "torchtuples>=0.2.0",
         "joblib>=1.0.0",
         "tqdm>=4.60.0",
         "scipy>=1.6.0",
@@ -42,7 +40,7 @@ else:
 
 setup(
     name="texgisa-survival",  # Using hyphenated name to match pyproject.toml
-    version="1.0.0",       # Updated to match pyproject.toml
+    version="2.0.0",       # Updated to match pyproject.toml
     author="DHAI Lab",
     author_email="texgisa-survival@example.com",  # Match pyproject.toml
     maintainer="DHAI Lab",

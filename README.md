@@ -91,6 +91,19 @@ This implementation is based on our research published at **ICDM 2024**: *"TexGI
 pip install texgisa-survival
 ```
 
+### With optional extras
+
+```bash
+# Baseline models (CoxTime, DeepSurv, DeepHit) — requires pycox
+pip install texgisa-survival[baselines]
+
+# Counterfactual explanations
+pip install texgisa-survival[counterfactuals]
+
+# Everything
+pip install texgisa-survival[all]
+```
+
 ### From Source
 
 ```bash
@@ -457,6 +470,92 @@ for batch in dataloader:
         modality_mask=batch['modality_mask']
     )
     # Compute loss and train...
+```
+
+## Baseline Models (v2.0)
+
+TexGISa v2.0 includes baseline survival models backed by [pycox](https://github.com/havakv/pycox).
+Install the baselines extra: `pip install texgisa-survival[baselines]`
+
+### CoxTime
+
+```python
+from texgisa_survival import CoxTimeModel
+
+model = CoxTimeModel(num_nodes=[64, 64])
+model.fit(X_train, time_train, event_train, epochs=100)
+surv = model.predict_survival(X_test)      # [n_samples, n_times]
+risk = model.predict_risk(X_test)           # [n_samples]
+metrics = model.evaluate(X_test, time_test, event_test)
+print(f"C-index: {metrics['c_index']:.3f}")
+```
+
+### DeepSurv
+
+```python
+from texgisa_survival import DeepSurvModel
+
+model = DeepSurvModel(num_nodes=[64, 64])
+model.fit(X_train, time_train, event_train, epochs=64)
+```
+
+### DeepHit
+
+```python
+from texgisa_survival import DeepHitModel
+
+model = DeepHitModel(num_nodes=[64, 64], out_features=100)
+model.fit(X_train, time_train, event_train, epochs=100)
+```
+
+## Counterfactual Explanations (v2.0)
+
+Generate "what-if" explanations for survival predictions.
+
+### Hazard-scaling method
+
+```python
+from texgisa_survival import CounterfactualExplainer
+
+explainer = CounterfactualExplainer()
+result = explainer.explain(hazards=predicted_hazards, method='scaling', desired_extension=2.0)
+print(result.table)
+```
+
+### Gradient-based method
+
+```python
+from texgisa_survival import CounterfactualExplainer
+
+explainer = CounterfactualExplainer(model=my_model, feature_names=feature_names)
+result = explainer.explain(X_test, method='gradient', desired_extension=1.5, steps=100)
+print(result.table[['feature', 'delta', 'estimated_extension']])
+```
+
+## DataManager (v2.0)
+
+Lightweight dataset container for survival analysis workflows.
+
+```python
+from texgisa_survival import DataManager
+import pandas as pd
+
+dm = DataManager()
+dm.load_data(pd.read_csv("data.csv"), file_name="data.csv")
+print(dm.get_data_summary())
+
+# Multimodal support
+dm.load_multimodal_data(tabular_df=tab_df, image_df=img_df)
+```
+
+## Kaplan-Meier Estimator (v2.0)
+
+Pure-numpy Kaplan-Meier estimator (no lifelines dependency).
+
+```python
+from texgisa_survival import kaplan_meier_estimator
+
+times, survival = kaplan_meier_estimator(durations, events)
 ```
 
 ## Advanced Features
@@ -887,7 +986,7 @@ If you use TexGISa in your research, please cite both the software and the paper
   title = {TexGISa: Time-dependent EXtreme Gradient Integration for Survival Analysis},
   year = {2024},
   url = {https://github.com/dhai-lab/texgisa_survival},
-  version = {1.0.0}
+  version = {2.0.0}
 }
 ```
 
