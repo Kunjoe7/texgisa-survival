@@ -12,15 +12,7 @@ survival analysis with expert knowledge integration.
 from .base import BaseSurvivalModel
 from .texgisa import TEXGISAModel
 
-try:
-    from .baselines import CoxTimeModel, DeepSurvModel, DeepHitModel
-except ImportError:
-    pass
-
 __all__ = [
     'BaseSurvivalModel',
     'TEXGISAModel',
-    'CoxTimeModel',
-    'DeepSurvModel',
-    'DeepHitModel',
 ]

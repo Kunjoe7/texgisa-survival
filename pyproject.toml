@@ -82,15 +82,11 @@ examples = [
     "notebook>=6.4.0",
     "ipywidgets>=7.6.0",
 ]
-baselines = [
-    "pycox>=0.2.0",
-    "torchtuples>=0.2.0",
-]
 counterfactuals = [
     "dice-ml>=0.10",
 ]
 all = [
-    "texgisa-survival[dev,docs,examples,baselines,counterfactuals]",
+    "texgisa-survival[dev,docs,examples,counterfactuals]",
 ]
 
 [project.urls]

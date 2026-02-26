@@ -6,8 +6,7 @@
 Setup script for DHAI Survival Analysis Package
 
 This package provides comprehensive deep learning tools for survival analysis
-with interpretable AI capabilities, including implementations of Cox regression,
-DeepSurv, DeepHit, and TexGISa models.
+with interpretable AI capabilities, including the TexGISa model.
 """
 
 from setuptools import setup, find_packages

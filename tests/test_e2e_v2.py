@@ -4,7 +4,7 @@
 """
 End-to-end integration test for texgisa-survival v2.0.0.
 
-Validates the full pipeline: DataManager → KM curve → baseline model →
+Validates the full pipeline: DataManager → KM curve →
 counterfactual explanations, using synthetic data.
 """
 
@@ -13,16 +13,9 @@ import pandas as pd
 import pytest
 import torch
 
-pycox = pytest.importorskip("pycox", reason="pycox not installed")
-tt = pytest.importorskip("torchtuples", reason="torchtuples not installed")
-
 from texgisa_survival import __version__
 from texgisa_survival.data.manager import DataManager
-from texgisa_survival.metrics import (
-    concordance_index,
-    kaplan_meier_estimator,
-)
-from texgisa_survival.models.baselines import CoxTimeModel
+from texgisa_survival.metrics import kaplan_meier_estimator
 from texgisa_survival.models.texgisa import MultiTaskSurvivalNet
 from texgisa_survival.explainers.counterfactual import (
     CFResult,
@@ -109,32 +102,6 @@ class TestKaplanMeierE2E:
 
 
 @pytest.mark.slow
-class TestBaselineModelE2E:
-    def test_coxtime_full_pipeline(self, e2e_data):
-        X, time, event = e2e_data["X"], e2e_data["time"], e2e_data["event"]
-
-        # Train
-        model = CoxTimeModel(num_nodes=[16, 16], random_state=42)
-        model.fit(X, time, event, epochs=5, batch_size=64, patience=3)
-        assert model.is_fitted
-
-        # predict_survival
-        surv = model.predict_survival(X[:20])
-        assert surv.shape[0] == 20
-        assert surv.shape[1] > 0
-        assert np.all(surv >= 0) and np.all(surv <= 1.01)
-
-        # predict_risk
-        risk = model.predict_risk(X[:20])
-        assert risk.shape == (20,)
-
-        # evaluate
-        metrics = model.evaluate(X, time, event)
-        assert "c_index" in metrics
-        assert 0.0 <= metrics["c_index"] <= 1.0
-
-
-@pytest.mark.slow
 class TestCounterfactualScalingE2E:
     def test_scaling_from_hazards(self, e2e_data):
         hazards = np.random.RandomState(42).rand(10, 8).astype("float32")
@@ -206,7 +173,7 @@ class TestCounterfactualGradientE2E:
 
 @pytest.mark.slow
 class TestFullPipelineE2E:
-    """End-to-end: DataManager → KM → Baseline → Counterfactual."""
+    """End-to-end: DataManager → KM → Counterfactual."""
 
     def test_complete_workflow(self, e2e_data):
         X, time, event = e2e_data["X"], e2e_data["time"], e2e_data["event"]
@@ -222,14 +189,7 @@ class TestFullPipelineE2E:
         assert t_km[0] == 0.0 and S_km[0] == 1.0
         assert np.all(np.diff(S_km) <= 1e-10)
 
-        # 3. Train baseline
-        model = CoxTimeModel(num_nodes=[16, 16], random_state=42)
-        model.fit(X, time, event, epochs=5, batch_size=64, patience=3)
-        assert model.is_fitted
-        metrics = model.evaluate(X, time, event)
-        assert 0.0 <= metrics["c_index"] <= 1.0
-
-        # 4. Counterfactual (scaling) from synthetic hazards
+        # 3. Counterfactual (scaling) from synthetic hazards
         hazards = np.random.RandomState(99).rand(5, 8).astype("float32")
         cf_result = generate_cf_from_arrays(
             hazards, desired_extension=1.0, patient_indices=[0, 1]
@@ -237,7 +197,7 @@ class TestFullPipelineE2E:
         assert isinstance(cf_result, CFResult)
         assert not cf_result.table.empty
 
-        # 5. Counterfactual (gradient) with TexGISa net
+        # 4. Counterfactual (gradient) with TexGISa net
         net = MultiTaskSurvivalNet(
             input_dim=e2e_data["d"],
             hidden_layers=[16],

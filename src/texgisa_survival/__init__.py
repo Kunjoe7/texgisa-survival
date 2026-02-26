@@ -40,13 +40,6 @@ from .explainers.counterfactual import (
     generate_texgi_counterfactuals,
 )
 
-# Optional baseline models (require pycox)
-try:
-    from .models.baselines import CoxTimeModel, DeepSurvModel, DeepHitModel
-    _has_baselines = True
-except ImportError:
-    _has_baselines = False
-
 # Optional preprocessing modules
 try:
     from .preprocessing import TabularProcessor
@@ -93,9 +86,6 @@ __all__ = [
     "generate_cf_from_arrays",
     "generate_texgi_counterfactuals",
 ]
-
-if _has_baselines:
-    __all__.extend(["CoxTimeModel", "DeepSurvModel", "DeepHitModel"])
 
 if _has_preprocessing:
     __all__.append("TabularProcessor")

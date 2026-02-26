@@ -94,9 +94,6 @@ pip install texgisa-survival
 ### With optional extras
 
 ```bash
-# Baseline models (CoxTime, DeepSurv, DeepHit) — requires pycox
-pip install texgisa-survival[baselines]
-
 # Counterfactual explanations
 pip install texgisa-survival[counterfactuals]
 
@@ -470,42 +467,6 @@ for batch in dataloader:
         modality_mask=batch['modality_mask']
     )
     # Compute loss and train...
-```
-
-## Baseline Models (v2.0)
-
-TexGISa v2.0 includes baseline survival models backed by [pycox](https://github.com/havakv/pycox).
-Install the baselines extra: `pip install texgisa-survival[baselines]`
-
-### CoxTime
-
-```python
-from texgisa_survival import CoxTimeModel
-
-model = CoxTimeModel(num_nodes=[64, 64])
-model.fit(X_train, time_train, event_train, epochs=100)
-surv = model.predict_survival(X_test)      # [n_samples, n_times]
-risk = model.predict_risk(X_test)           # [n_samples]
-metrics = model.evaluate(X_test, time_test, event_test)
-print(f"C-index: {metrics['c_index']:.3f}")
-```
-
-### DeepSurv
-
-```python
-from texgisa_survival import DeepSurvModel
-
-model = DeepSurvModel(num_nodes=[64, 64])
-model.fit(X_train, time_train, event_train, epochs=64)
-```
-
-### DeepHit
-
-```python
-from texgisa_survival import DeepHitModel
-
-model = DeepHitModel(num_nodes=[64, 64], out_features=100)
-model.fit(X_train, time_train, event_train, epochs=100)
 ```
 
 ## Counterfactual Explanations (v2.0)
