@@ -942,24 +942,22 @@ If you use TexGISa in your research, please cite both the software and the paper
 ### Software Citation
 
 ```bibtex
-@software{texgisa2024,
-  author = {DHAI Lab},
-  title = {TexGISa: Time-dependent EXtreme Gradient Integration for Survival Analysis},
-  year = {2024},
-  url = {https://github.com/dhai-lab/texgisa_survival},
-  version = {2.0.0}
-}
+
 ```
 
 ### Paper Citation
 
 ```bibtex
-@inproceedings{texgisa2024,
-  title={TexGISa: Interpretable and Interactive Deep Survival Analysis with Time-dependent Extreme Gradient Integration},
-  author={Author Names},
-  booktitle={Proceedings of the IEEE International Conference on Data Mining (ICDM)},
-  year={2024}
-}
+@INPROCEEDINGS{11391919,
+  author={Qin, Xinyu and Yu, Ruiheng and Khayati, Armin and Qiu, Zixiao and Zou, Gengyi and Li, Yan and Wang, Lu},
+  booktitle={2025 IEEE International Conference on Data Mining (ICDM)}, 
+  title={Interpretable and Interactive Deep Survival Analysis with Time-dependent EXtreme Gradient Integration}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={673-682},
+  keywords={Training;Image sensors;Accuracy;Refining;Medical services;Predictive models;Reliability;Indexes;Forecasting;Business;Survival Analysis;Deep Learning;interactive Machine Learning (iML);eXplainable Artificial Intelligence (XAI);Adversarial Generation;Human-Centered AI},
+  doi={10.1109/ICDM65498.2025.00075}}
 ```
 
 ## License
