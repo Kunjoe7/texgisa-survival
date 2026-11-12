@@ -19,8 +19,8 @@ import numpy as np
 from torch.utils.data import Dataset
 from pathlib import Path
 
-
 # ---------------------- Image Encoder ----------------------
+
 
 class ImageEncoder(nn.Module):
     """
@@ -31,12 +31,21 @@ class ImageEncoder(nn.Module):
         super().__init__()
 
         if backbone.startswith("resnet"):
-            import torchvision.models as models
+            try:
+                import torchvision.models as models
+            except ImportError as err:
+                raise ImportError(
+                    "torchvision is required for image encoders. Install with: "
+                    "pip install 'texgisa-survival[images]'"
+                ) from err
+            # torchvision >= 0.13 weights API (`pretrained=` was removed later)
             if backbone == "resnet18":
-                self.encoder = models.resnet18(pretrained=pretrained)
+                weights = models.ResNet18_Weights.DEFAULT if pretrained else None
+                self.encoder = models.resnet18(weights=weights)
                 self.out_dim = 512
             elif backbone == "resnet50":
-                self.encoder = models.resnet50(pretrained=pretrained)
+                weights = models.ResNet50_Weights.DEFAULT if pretrained else None
+                self.encoder = models.resnet50(weights=weights)
                 self.out_dim = 2048
             else:
                 raise ValueError(f"Unsupported ResNet variant: {backbone}")
@@ -47,15 +56,18 @@ class ImageEncoder(nn.Module):
         elif backbone.startswith("vit"):
             try:
                 import timm
+
                 if backbone == "vit_base" or backbone == "vit_b_16":
-                    self.encoder = timm.create_model('vit_base_patch16_224',
-                                                    pretrained=pretrained,
-                                                    num_classes=0)  # No classification head
+                    self.encoder = timm.create_model(
+                        "vit_base_patch16_224", pretrained=pretrained, num_classes=0
+                    )  # No classification head
                     self.out_dim = 768
                 else:
                     raise ValueError(f"Unsupported ViT variant: {backbone}")
             except ImportError:
-                raise ImportError("timm library required for ViT models. Install with: pip install timm")
+                raise ImportError(
+                    "timm library required for ViT models. Install with: pip install timm"
+                )
         else:
             raise ValueError(f"Unsupported backbone: {backbone}")
 
@@ -79,15 +91,13 @@ class ImageEncoder(nn.Module):
 
 # ---------------------- Sensor Encoder ----------------------
 
+
 class SensorEncoder(nn.Module):
     """
     1D sensor/time-series encoder using CNN or Transformer.
     """
 
-    def __init__(self,
-                 input_channels: int = 1,
-                 backbone: str = "cnn",
-                 hidden_dim: int = 128):
+    def __init__(self, input_channels: int = 1, backbone: str = "cnn", hidden_dim: int = 128):
         super().__init__()
 
         if backbone == "cnn":
@@ -101,7 +111,7 @@ class SensorEncoder(nn.Module):
                 nn.MaxPool1d(2),
                 nn.Conv1d(64, hidden_dim, kernel_size=3, padding=1),
                 nn.ReLU(),
-                nn.AdaptiveAvgPool1d(1)
+                nn.AdaptiveAvgPool1d(1),
             )
             self.out_dim = hidden_dim
 
@@ -114,13 +124,10 @@ class SensorEncoder(nn.Module):
                 nhead=4,
                 dim_feedforward=hidden_dim * 4,
                 dropout=0.1,
-                batch_first=True
+                batch_first=True,
             )
             self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
-            self.pooling = nn.Sequential(
-                nn.AdaptiveAvgPool1d(1),
-                nn.Flatten()
-            )
+            self.pooling = nn.Sequential(nn.AdaptiveAvgPool1d(1), nn.Flatten())
             self.out_dim = hidden_dim
         else:
             raise ValueError(f"Unsupported sensor backbone: {backbone}")
@@ -170,17 +177,20 @@ class SensorEncoder(nn.Module):
 
 # ---------------------- Multimodal Fusion Model ----------------------
 
+
 class MultiModalFusionModel(nn.Module):
     """
     Gating-based fusion model for multimodal survival analysis.
     """
 
-    def __init__(self,
-                 modality_configs: Dict[str, Dict[str, Any]],
-                 num_bins: int,
-                 hidden: int = 256,
-                 depth: int = 2,
-                 dropout: float = 0.2):
+    def __init__(
+        self,
+        modality_configs: Dict[str, Dict[str, Any]],
+        num_bins: int,
+        hidden: int = 256,
+        depth: int = 2,
+        dropout: float = 0.2,
+    ):
         """
         Parameters
         ----------
@@ -211,19 +221,19 @@ class MultiModalFusionModel(nn.Module):
             self.modality_order.append(name)
 
             if name == "tabular":
-                input_dim = config['input_dim']
+                input_dim = config["input_dim"]
                 encoder = self._build_tabular_encoder(input_dim, hidden, depth, dropout)
                 embed_dim = hidden
 
             elif name == "image":
-                backbone = config.get('backbone', 'resnet18')
-                pretrained = config.get('pretrained', True)
+                backbone = config.get("backbone", "resnet18")
+                pretrained = config.get("pretrained", True)
                 encoder = ImageEncoder(backbone, pretrained)
                 embed_dim = encoder.out_dim
 
             elif name == "sensor":
-                input_channels = config.get('input_channels', 1)
-                backbone = config.get('backbone', 'cnn')
+                input_channels = config.get("input_channels", 1)
+                backbone = config.get("backbone", "cnn")
                 encoder = SensorEncoder(input_channels, backbone)
                 embed_dim = encoder.out_dim
             else:
@@ -236,7 +246,7 @@ class MultiModalFusionModel(nn.Module):
                 self.projectors[name] = nn.Sequential(
                     nn.Linear(embed_dim, hidden),
                     nn.ReLU(),
-                    nn.Dropout(dropout) if dropout > 0 else nn.Identity()
+                    nn.Dropout(dropout) if dropout > 0 else nn.Identity(),
                 )
             else:
                 self.projectors[name] = nn.Identity()
@@ -250,8 +260,9 @@ class MultiModalFusionModel(nn.Module):
         # Initialize weights
         self.apply(self._init_weights)
 
-    def _build_tabular_encoder(self, input_dim: int, hidden: int,
-                              depth: int, dropout: float) -> nn.Sequential:
+    def _build_tabular_encoder(
+        self, input_dim: int, hidden: int, depth: int, dropout: float
+    ) -> nn.Sequential:
         """Build MLP encoder for tabular data."""
         layers = []
         d = input_dim
@@ -270,10 +281,12 @@ class MultiModalFusionModel(nn.Module):
             if m.bias is not None:
                 nn.init.zeros_(m.bias)
 
-    def forward(self,
-                x: Union[Dict[str, torch.Tensor], torch.Tensor],
-                modality_mask: Optional[torch.Tensor] = None,
-                return_embeddings: bool = False) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+    def forward(
+        self,
+        x: Union[Dict[str, torch.Tensor], torch.Tensor],
+        modality_mask: Optional[torch.Tensor] = None,
+        return_embeddings: bool = False,
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Parameters
         ----------
@@ -332,11 +345,11 @@ class MultiModalFusionModel(nn.Module):
 
         else:
             # Backward compatibility: assume tabular only
-            if 'tabular' not in self.encoders:
+            if "tabular" not in self.encoders:
                 raise ValueError("Tabular encoder required for tensor input")
 
-            encoded = self.encoders['tabular'](x)
-            fused = self.projectors['tabular'](encoded)
+            encoded = self.encoders["tabular"](x)
+            fused = self.projectors["tabular"](encoded)
 
         # Predict hazards
         hazards = torch.sigmoid(self.hazard_layer(fused))
@@ -347,6 +360,7 @@ class MultiModalFusionModel(nn.Module):
 
 
 # ---------------------- Asset-backed Dataset ----------------------
+
 
 class SensorSpec:
     """Specification for sensor data."""
@@ -362,17 +376,19 @@ class AssetBackedMultiModalDataset(Dataset):
     Keeps tabular data in memory for efficiency.
     """
 
-    def __init__(self,
-                 ids: List[str],
-                 tabular: np.ndarray,
-                 labels: np.ndarray,
-                 masks: np.ndarray,
-                 modality_mask: np.ndarray,
-                 tabular_names: List[str],
-                 image_paths: Optional[List[Optional[str]]] = None,
-                 image_size: Tuple[int, int] = (224, 224),
-                 sensor_paths: Optional[List[Optional[str]]] = None,
-                 sensor_spec: Optional[SensorSpec] = None):
+    def __init__(
+        self,
+        ids: List[str],
+        tabular: np.ndarray,
+        labels: np.ndarray,
+        masks: np.ndarray,
+        modality_mask: np.ndarray,
+        tabular_names: List[str],
+        image_paths: Optional[List[Optional[str]]] = None,
+        image_size: Tuple[int, int] = (224, 224),
+        sensor_paths: Optional[List[Optional[str]]] = None,
+        sensor_spec: Optional[SensorSpec] = None,
+    ):
         """
         Parameters
         ----------
@@ -420,19 +436,22 @@ class AssetBackedMultiModalDataset(Dataset):
         """Load and preprocess image."""
         if self._pil_image is None:
             from PIL import Image
+
             self._pil_image = Image
 
         if self._transforms is None:
             from torchvision import transforms
-            self._transforms = transforms.Compose([
-                transforms.Resize(self.image_size),
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                   std=[0.229, 0.224, 0.225])
-            ])
+
+            self._transforms = transforms.Compose(
+                [
+                    transforms.Resize(self.image_size),
+                    transforms.ToTensor(),
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                ]
+            )
 
         try:
-            img = self._pil_image.open(path).convert('RGB')
+            img = self._pil_image.open(path).convert("RGB")
             return self._transforms(img)
         except Exception:
             # Return zeros if loading fails
@@ -442,10 +461,11 @@ class AssetBackedMultiModalDataset(Dataset):
         """Load and preprocess sensor data."""
         try:
             # Try to load as numpy file
-            if path.endswith('.npy'):
+            if path.endswith(".npy"):
                 data = np.load(path)
-            elif path.endswith('.csv'):
+            elif path.endswith(".csv"):
                 import pandas as pd
+
                 data = pd.read_csv(path).values
             else:
                 # Try numpy loadtxt
@@ -485,39 +505,39 @@ class AssetBackedMultiModalDataset(Dataset):
     def __getitem__(self, idx: int) -> Dict[str, Any]:
         """Get a sample."""
         sample = {
-            'id': self.ids[idx],
-            'modalities': {'tabular': self.tabular[idx]},
-            'y': self.labels[idx],
-            'm': self.masks[idx],
-            'modality_mask': self.modality_mask[idx]
+            "id": self.ids[idx],
+            "modalities": {"tabular": self.tabular[idx]},
+            "y": self.labels[idx],
+            "m": self.masks[idx],
+            "modality_mask": self.modality_mask[idx],
         }
 
         # Load image if available
         if self.image_paths and self.image_paths[idx]:
-            sample['modalities']['image'] = self._load_image(self.image_paths[idx])
+            sample["modalities"]["image"] = self._load_image(self.image_paths[idx])
 
         # Load sensor if available
         if self.sensor_paths and self.sensor_paths[idx]:
-            sample['modalities']['sensor'] = self._load_sensor(self.sensor_paths[idx])
+            sample["modalities"]["sensor"] = self._load_sensor(self.sensor_paths[idx])
 
         return sample
 
     @staticmethod
     def collate_fn(batch: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Custom collate function for batching."""
-        ids = [s['id'] for s in batch]
+        ids = [s["id"] for s in batch]
 
         # Stack modalities
-        modality_names = batch[0]['modalities'].keys()
+        modality_names = batch[0]["modalities"].keys()
         modalities = {}
         for name in modality_names:
-            if name in batch[0]['modalities']:
-                modalities[name] = torch.stack([s['modalities'][name] for s in batch])
+            if name in batch[0]["modalities"]:
+                modalities[name] = torch.stack([s["modalities"][name] for s in batch])
 
         return {
-            'ids': ids,
-            'modalities': modalities,
-            'y': torch.stack([s['y'] for s in batch]),
-            'm': torch.stack([s['m'] for s in batch]),
-            'modality_mask': torch.stack([s['modality_mask'] for s in batch])
+            "ids": ids,
+            "modalities": modalities,
+            "y": torch.stack([s["y"] for s in batch]),
+            "m": torch.stack([s["m"] for s in batch]),
+            "modality_mask": torch.stack([s["modality_mask"] for s in batch]),
         }

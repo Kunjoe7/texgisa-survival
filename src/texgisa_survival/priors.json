@@ -1,0 +1,78 @@
+{
+  "policy": "Frozen domain hypotheses, not clinician-elicited or causally established. Symbols refer to named author CSV columns; no guessed mappings for anonymous x columns. Thresholds are fitting-set medians in the standardized coordinate with positive feature scale.",
+  "metabric": {
+    "rules": [],
+    "status": "anonymous feature mapping unverified; structural TEXGI prior only"
+  },
+  "gbsg": {
+    "rules": [],
+    "status": "anonymous feature mapping unverified; structural TEXGI prior only; not GBSG2"
+  },
+  "support": {
+    "rules": [],
+    "status": "anonymous feature mapping unverified; structural TEXGI prior only"
+  },
+  "flchain": {
+    "rules": [
+      {
+        "feature": "flc.grp",
+        "sign": 1,
+        "condition": "above_training_median"
+      }
+    ],
+    "source": "https://stat.ethz.ch/R-manual/R-devel/library/survival/html/flchain.html",
+    "basis": "Official documentation reports elevated FLC associated with higher mortality; soft directional hypothesis on the ordinal FLC group, not a treatment or causal rule."
+  },
+  "nwtco": {
+    "rules": [
+      {
+        "feature": "stage",
+        "sign": 1,
+        "condition": "above_training_median"
+      }
+    ],
+    "source": "https://stat.ethz.ch/R-manual/R-devel/library/survival/html/nwtco.html",
+    "basis": "Documented disease-stage covariate; increasing-stage/increasing-relapse-risk is a prespecified domain hypothesis, not an effect estimate supplied by this documentation."
+  },
+  "telco_clt": {
+    "rules": [
+      {
+        "feature": "Contract_Two year",
+        "sign": -1,
+        "condition": "all"
+      }
+    ],
+    "source": "https://github.com/IBM/telco-customer-churn-on-icp4d",
+    "basis": "Two-year contract is a documented commitment feature; protective churn direction is a prespecified business hypothesis, not independently verified causality."
+  },
+  "telco_clv": {
+    "rules": [
+      {
+        "feature": "Contract_Two year",
+        "sign": -1,
+        "condition": "all"
+      }
+    ],
+    "source": "https://github.com/IBM/telco-customer-churn-on-icp4d",
+    "basis": "Same customers with monetary accumulation target; protective direction in this axis is an explicit exploratory transfer assumption, not calendar-time evidence."
+  },
+  "employee": {
+    "rules": [
+      {
+        "feature": "satisfaction_level",
+        "sign": -1,
+        "condition": "all"
+      }
+    ],
+    "source": "https://github.com/square/pysurvival/blob/master/pysurvival/datasets/employee_attrition.csv",
+    "basis": "Documented satisfaction feature; lower turnover hazard with higher satisfaction is a frozen soft domain hypothesis, not an expert elicitation or verified causal effect."
+  },
+  "tcga": {
+    "rules": [],
+    "status": "No invented expression-risk signs. Gene-importance membership comes from external IntOGen TCGA driver evidence; see public manifest."
+  },
+  "custom": {
+    "rules": [],
+    "status": "No named domain directions; structural TEXGI constraints only."
+  }
+}

@@ -10,10 +10,9 @@ import numpy as np
 from lifelines.utils import concordance_index as lifelines_concordance_index
 
 
-def concordance_index(time: np.ndarray,
-                     predicted_scores: np.ndarray,
-                     event: np.ndarray,
-                     tied_tol: float = 1e-8) -> float:
+def concordance_index(
+    time: np.ndarray, predicted_scores: np.ndarray, event: np.ndarray, tied_tol: float = 1e-8
+) -> float:
     """
     Calculate Harrell's concordance index (C-index).
 
@@ -46,16 +45,19 @@ def concordance_index(time: np.ndarray,
     if not (len(time) == len(predicted_scores) == len(event)):
         raise ValueError("time, predicted_scores, and event must have the same length")
 
-    # lifelines expects: higher score = longer survival time (positive correlation)
-    # Our API: predicted_scores represent expected survival time (higher = longer survival)
-    return lifelines_concordance_index(time, predicted_scores, event)
+    # Our API: predicted_scores are risk scores (higher = earlier event), as
+    # returned by predict_risk(). lifelines expects the opposite orientation
+    # (higher = longer survival), so the scores are negated before the call.
+    return lifelines_concordance_index(time, -predicted_scores, event)
 
 
-def brier_score(time: np.ndarray,
-               survival_probs: np.ndarray,
-               event: np.ndarray,
-               time_point: float = None,
-               eval_times: np.ndarray = None) -> float:
+def brier_score(
+    time: np.ndarray,
+    survival_probs: np.ndarray,
+    event: np.ndarray,
+    time_point: float = None,
+    eval_times: np.ndarray = None,
+) -> float:
     """
     Calculate time-dependent Brier score.
 
@@ -86,42 +88,49 @@ def brier_score(time: np.ndarray,
 
     # Handle single time point evaluation
     if time_point is not None:
-        # Single time point evaluation
+        if survival_probs.ndim == 2 and survival_probs.shape[1] != 1:
+            raise ValueError(
+                "With time_point, survival_probs must be 1-D or have one column "
+                "(the predicted survival at time_point)."
+            )
+        predicted = survival_probs.reshape(-1)
         weights = _calculate_ipcw_weights(time, event, time_point)
         observed = (time > time_point).astype(float)
-        if survival_probs.ndim == 1:
-            predicted = survival_probs
-        else:
-            predicted = survival_probs[:, 0]
         return float(np.mean(weights * (observed - predicted) ** 2))
 
     # Multiple time points
     if eval_times is None:
         eval_times = np.sort(np.unique(time[event == 1]))
+    eval_times = np.asarray(eval_times)
+    _check_survival_grid(survival_probs, eval_times)
 
-    n_times = len(eval_times)
-    scores = np.zeros(n_times)
-
+    scores = np.zeros(len(eval_times))
     for t_idx, t in enumerate(eval_times):
         weights = _calculate_ipcw_weights(time, event, t)
         observed = (time > t).astype(float)
-
-        if survival_probs.ndim == 1:
-            predicted = survival_probs
-        elif t_idx < survival_probs.shape[1]:
-            predicted = survival_probs[:, t_idx]
-        else:
-            predicted = survival_probs[:, -1]
-
+        predicted = survival_probs.reshape(len(time), -1)[:, t_idx]
         scores[t_idx] = np.mean(weights * (observed - predicted) ** 2)
 
     return float(np.mean(scores))
 
 
-def integrated_brier_score(time: np.ndarray,
-                         survival_probs: np.ndarray,
-                         event: np.ndarray,
-                         eval_times: Optional[np.ndarray] = None) -> float:
+def _check_survival_grid(survival_probs: np.ndarray, eval_times: np.ndarray) -> None:
+    """Column k of survival_probs must be the prediction at eval_times[k]."""
+    n_cols = 1 if survival_probs.ndim == 1 else survival_probs.shape[1]
+    if n_cols != len(eval_times):
+        raise ValueError(
+            f"survival_probs has {n_cols} column(s) but {len(eval_times)} evaluation times were "
+            "given; column k must hold S(eval_times[k]). Use "
+            "model.predict_survival(X, times=eval_times) to obtain matching predictions."
+        )
+
+
+def integrated_brier_score(
+    time: np.ndarray,
+    survival_probs: np.ndarray,
+    event: np.ndarray,
+    eval_times: Optional[np.ndarray] = None,
+) -> float:
     """
     Calculate integrated Brier score (IBS).
 
@@ -152,23 +161,17 @@ def integrated_brier_score(time: np.ndarray,
     else:
         eval_times = np.asarray(eval_times)
 
-    if len(eval_times) < 2:
+    _check_survival_grid(survival_probs, eval_times)
+    if len(eval_times) == 1:
         # Single time point - just return the Brier score
-        return brier_score(time, survival_probs, event, time_point=eval_times[0] if len(eval_times) == 1 else time.mean())
+        return brier_score(time, survival_probs, event, time_point=eval_times[0])
 
+    S = survival_probs.reshape(len(time), -1)
     scores = []
     for t_idx, t in enumerate(eval_times):
         weights = _calculate_ipcw_weights(time, event, t)
         observed = (time > t).astype(float)
-
-        if survival_probs.ndim == 1:
-            predicted = survival_probs
-        elif t_idx < survival_probs.shape[1]:
-            predicted = survival_probs[:, t_idx]
-        else:
-            predicted = survival_probs[:, -1]
-
-        score_t = np.mean(weights * (observed - predicted) ** 2)
+        score_t = np.mean(weights * (observed - S[:, t_idx]) ** 2)
         scores.append(score_t)
 
     # Integrate using trapezoidal rule
@@ -179,10 +182,9 @@ def integrated_brier_score(time: np.ndarray,
     return float(ibs)
 
 
-def cumulative_dynamic_auc(time: np.ndarray,
-                          risk_scores: np.ndarray,
-                          event: np.ndarray,
-                          eval_times: np.ndarray) -> np.ndarray:
+def cumulative_dynamic_auc(
+    time: np.ndarray, risk_scores: np.ndarray, event: np.ndarray, eval_times: np.ndarray
+) -> np.ndarray:
     """
     Calculate cumulative/dynamic AUC for survival analysis.
 
@@ -219,14 +221,8 @@ def cumulative_dynamic_auc(time: np.ndarray,
         mask_control = time > t
 
         if mask_case.sum() > 0 and mask_control.sum() > 0:
-            y_binary = np.concatenate([
-                np.ones(mask_case.sum()),
-                np.zeros(mask_control.sum())
-            ])
-            scores_binary = np.concatenate([
-                risk_scores[mask_case],
-                risk_scores[mask_control]
-            ])
+            y_binary = np.concatenate([np.ones(mask_case.sum()), np.zeros(mask_control.sum())])
+            scores_binary = np.concatenate([risk_scores[mask_case], risk_scores[mask_control]])
 
             try:
                 auc_t = roc_auc_score(y_binary, scores_binary)
@@ -239,12 +235,10 @@ def cumulative_dynamic_auc(time: np.ndarray,
     return np.array(aucs)
 
 
-def _calculate_ipcw_weights(time: np.ndarray,
-                           event: np.ndarray,
-                           eval_time: float) -> np.ndarray:
+def _calculate_ipcw_weights(time: np.ndarray, event: np.ndarray, eval_time: float) -> np.ndarray:
     """
     Calculate inverse probability of censoring weights (IPCW).
-    
+
     Parameters
     ----------
     time : np.ndarray
@@ -253,50 +247,50 @@ def _calculate_ipcw_weights(time: np.ndarray,
         Event indicators
     eval_time : float
         Evaluation time point
-        
+
     Returns
     -------
     weights : np.ndarray
         IPCW weights for each sample
     """
     from lifelines import KaplanMeierFitter
-    
+
     # Fit KM for censoring distribution (reverse the event indicator)
     kmf_censor = KaplanMeierFitter()
     kmf_censor.fit(time, 1 - event)
-    
-    weights = np.ones(len(time))
-    
-    for i in range(len(time)):
-        if time[i] <= eval_time and event[i] == 1:
-            # Event occurred before eval_time
-            surv_prob = kmf_censor.survival_function_at_times(time[i]).values[0]
-            weights[i] = 1.0 / max(surv_prob, 0.01)  # Avoid division by very small numbers
-        elif time[i] > eval_time:
-            # Survived beyond eval_time
-            surv_prob = kmf_censor.survival_function_at_times(eval_time).values[0]
-            weights[i] = 1.0 / max(surv_prob, 0.01)
-        else:
-            # Censored before eval_time
-            weights[i] = 0
-            
+
+    time = np.asarray(time, dtype=float)
+    event = np.asarray(event)
+    weights = np.zeros(len(time))  # censored before eval_time: weight 0
+
+    # Event by eval_time: 1 / G(T_i-), the censoring survival just before T_i (Graf et al., 1999)
+    had_event = (time <= eval_time) & (event == 1)
+    if had_event.any():
+        g = kmf_censor.survival_function_at_times(np.nextafter(time[had_event], -np.inf)).values
+        weights[had_event] = 1.0 / np.maximum(g, 0.01)  # avoid division by very small numbers
+
+    # Still at risk after eval_time: 1 / G(eval_time)
+    alive = time > eval_time
+    if alive.any():
+        g = kmf_censor.survival_function_at_times(eval_time).values[0]
+        weights[alive] = 1.0 / max(g, 0.01)
+
     return weights
 
 
-def log_rank_test(time1: np.ndarray,
-                  event1: np.ndarray,
-                  time2: np.ndarray,
-                  event2: np.ndarray) -> Tuple[float, float]:
+def log_rank_test(
+    time1: np.ndarray, event1: np.ndarray, time2: np.ndarray, event2: np.ndarray
+) -> Tuple[float, float]:
     """
     Perform log-rank test to compare two survival curves.
-    
+
     Parameters
     ----------
     time1, event1 : np.ndarray
         Survival data for group 1
     time2, event2 : np.ndarray
         Survival data for group 2
-        
+
     Returns
     -------
     statistic : float
@@ -305,7 +299,7 @@ def log_rank_test(time1: np.ndarray,
         P-value for the test
     """
     from lifelines.statistics import logrank_test
-    
+
     result = logrank_test(time1, time2, event1, event2)
     return result.test_statistic, result.p_value
 
@@ -369,14 +363,14 @@ def kaplan_meier_estimator(
     return np.array(t_nodes), np.array(S_nodes)
 
 
-def calibration_slope(predicted_risk: np.ndarray,
-                     observed_risk: np.ndarray,
-                     n_bins: int = 10) -> float:
+def calibration_slope(
+    predicted_risk: np.ndarray, observed_risk: np.ndarray, n_bins: int = 10
+) -> float:
     """
     Calculate calibration slope.
-    
+
     A well-calibrated model has a slope close to 1.
-    
+
     Parameters
     ----------
     predicted_risk : np.ndarray
@@ -385,36 +379,36 @@ def calibration_slope(predicted_risk: np.ndarray,
         Observed outcomes
     n_bins : int
         Number of bins for grouping predictions
-        
+
     Returns
     -------
     slope : float
         Calibration slope
     """
     from sklearn.linear_model import LinearRegression
-    
+
     # Bin predictions
     bins = np.percentile(predicted_risk, np.linspace(0, 100, n_bins + 1))
     bin_centers = []
     observed_freq = []
-    
+
     for i in range(n_bins):
         if i < n_bins - 1:
             mask = (predicted_risk >= bins[i]) & (predicted_risk < bins[i + 1])
         else:
             mask = predicted_risk >= bins[i]
-            
+
         if mask.sum() > 0:
             bin_centers.append(predicted_risk[mask].mean())
             observed_freq.append(observed_risk[mask].mean())
-    
+
     if len(bin_centers) < 2:
         return np.nan
-        
+
     # Fit linear regression
     reg = LinearRegression()
     X = np.array(bin_centers).reshape(-1, 1)
     y = np.array(observed_freq)
     reg.fit(X, y)
-    
+
     return reg.coef_[0]

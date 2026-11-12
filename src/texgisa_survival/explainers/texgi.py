@@ -15,11 +15,11 @@ import functools
 import operator
 import torch
 from torch.autograd import grad
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, RandomSampler
 import numpy as np
 from typing import Optional, List
 
-DEFAULT_DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+DEFAULT_DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def gather_nd(params, indices):
@@ -86,13 +86,15 @@ class TEXGIExplainer:
         Device for computation ('cpu', 'cuda', 'mps')
     """
 
-    def __init__(self,
-                 background_data: torch.Tensor,
-                 batch_size: int = 32,
-                 random_alpha: bool = True,
-                 k: int = 10,
-                 scale_by_inputs: bool = True,
-                 device: Optional[str] = None):
+    def __init__(
+        self,
+        background_data: torch.Tensor,
+        batch_size: int = 32,
+        random_alpha: bool = True,
+        k: int = 10,
+        scale_by_inputs: bool = True,
+        device: Optional[str] = None,
+    ):
 
         self.random_alpha = random_alpha
         self.k = k
@@ -107,12 +109,19 @@ class TEXGIExplainer:
 
         # Create dataset and dataloader for reference samples
         self.ref_set = SimpleDataset(background_data.to(self.device))
-        self.ref_sampler = DataLoader(
-            dataset=self.ref_set,
-            batch_size=batch_size * k,
-            shuffle=True,
-            drop_last=True
-        )
+        n_ref = batch_size * k
+        if len(self.ref_set) >= n_ref:
+            self.ref_sampler = DataLoader(
+                dataset=self.ref_set, batch_size=n_ref, shuffle=True, drop_last=True
+            )
+        else:
+            # fewer background samples than one batch needs: draw with replacement
+            # (drop_last would otherwise leave no batch at all)
+            self.ref_sampler = DataLoader(
+                dataset=self.ref_set,
+                batch_size=n_ref,
+                sampler=RandomSampler(self.ref_set, replacement=True, num_samples=n_ref),
+            )
 
     def _get_ref_batch(self):
         """Get a batch of reference samples."""
@@ -140,9 +149,13 @@ class TEXGIExplainer:
             t_tensor = torch.FloatTensor(batch_size, k_).uniform_(0, 1).to(self.device)
         else:
             if k_ == 1:
-                t_tensor = torch.cat([torch.Tensor([1.0]) for _ in range(batch_size)]).to(self.device)
+                t_tensor = torch.cat([torch.Tensor([1.0]) for _ in range(batch_size)]).to(
+                    self.device
+                )
             else:
-                t_tensor = torch.cat([torch.linspace(0, 1, k_) for _ in range(batch_size)]).to(self.device)
+                t_tensor = torch.cat([torch.linspace(0, 1, k_) for _ in range(batch_size)]).to(
+                    self.device
+                )
 
         shape = [batch_size, k_] + [1] * num_input_dims
         interp_coef = t_tensor.view(*shape)
@@ -192,17 +205,16 @@ class TEXGIExplainer:
 
                 if batch_output.size(1) > 1:
                     sample_indices = torch.arange(0, batch_output.size(0)).to(self.device)
-                    indices_tensor = torch.cat([
-                        sample_indices.unsqueeze(1),
-                        sparse_labels.unsqueeze(1)
-                    ], dim=1)
+                    indices_tensor = torch.cat(
+                        [sample_indices.unsqueeze(1), sparse_labels.unsqueeze(1)], dim=1
+                    )
                     batch_output = gather_nd(batch_output, indices_tensor)
 
                 model_grads = grad(
                     outputs=batch_output,
                     inputs=particular_slice,
                     grad_outputs=torch.ones_like(batch_output).to(self.device),
-                    create_graph=True
+                    create_graph=True,
                 )
                 grad_tensors[idx][:, i, :] = model_grads[0]
 
@@ -223,11 +235,9 @@ class TEXGIExplainer:
         # Get reference batch
         reference_tensor = self._get_ref_batch()
         shape = reference_tensor.shape
-        reference_tensor = reference_tensor.view(
-            self.batch_size,
-            self.k,
-            *(shape[1:])
-        ).to(self.device)
+        reference_tensor = reference_tensor.view(self.batch_size, self.k, *(shape[1:])).to(
+            self.device
+        )
 
         # Create interpolated samples
         samples_input = self._get_samples_input(input_tensor, reference_tensor)

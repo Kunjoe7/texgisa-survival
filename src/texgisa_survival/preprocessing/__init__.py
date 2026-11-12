@@ -16,6 +16,7 @@ import warnings
 # Try to import specialized preprocessors
 try:
     from .sensor import SensorProcessor
+
     _has_sensor = True
 except ImportError as e:
     _has_sensor = False
@@ -23,6 +24,7 @@ except ImportError as e:
 
 try:
     from .image import ImageProcessor
+
     _has_image = True
 except ImportError as e:
     _has_image = False
@@ -54,14 +56,10 @@ def get_image_processor(*args, **kwargs):
     return ImageProcessor(*args, **kwargs)
 
 
-__all__ = [
-    'TabularProcessor',
-    'get_sensor_processor',
-    'get_image_processor'
-]
+__all__ = ["TabularProcessor", "get_sensor_processor", "get_image_processor"]
 
 # Conditional exports
 if _has_sensor:
-    __all__.append('SensorProcessor')
+    __all__.append("SensorProcessor")
 if _has_image:
-    __all__.append('ImageProcessor')
+    __all__.append("ImageProcessor")

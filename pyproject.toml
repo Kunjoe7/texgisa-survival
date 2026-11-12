@@ -1,19 +1,23 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "texgisa-survival"
-version = "2.0.0"
-description = "A comprehensive deep learning library for survival analysis with interpretable AI"
+version = "2.2.0"
+description = "Interpretable and interactive deep survival analysis: time-resolved TEXGI attributions and expert attribution priors"
 readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "MIT"}
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
-    {name = "DHAI Lab", email = "texgisa-survival@example.com"},
+    {name = "Xinyu Qin", email = "Xinyu_Qin1@baylor.edu"},
+    {name = "Ruiheng Yu", email = "ry26@fsu.edu"},
+    {name = "Yan Li", email = "yanrock.li@mail.utoronto.ca"},
+    {name = "Lu Wang", email = "Lu_Wang@baylor.edu"},
 ]
 maintainers = [
-    {name = "DHAI Lab", email = "texgisa-survival@example.com"},
+    {name = "Xinyu Qin", email = "Xinyu_Qin1@baylor.edu"},
 ]
 keywords = [
     "survival-analysis",
@@ -34,31 +38,30 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "Environment :: GPU :: NVIDIA CUDA",
 ]
 
 dependencies = [
-    "numpy>=1.19.0,<2.0.0",
-    "pandas>=1.2.0",
-    "scikit-learn>=0.24.0",
-    "torch>=1.9.0",
-    "matplotlib>=3.3.0",
-    "seaborn>=0.11.0",
-    "lifelines>=0.25.0",
-    "joblib>=1.0.0",
-    "tqdm>=4.60.0",
-    "scipy>=1.6.0",
+    "numpy>=1.21",
+    "pandas>=1.3",
+    "scikit-learn>=1.4",
+    "torch>=1.13",
+    "matplotlib>=3.5",
+    "seaborn>=0.11",
+    "lifelines>=0.27",
+    "joblib>=1.0",
+    "scipy>=1.7",
 ]
 
 [project.optional-dependencies]
+recipes = ["scikit-survival>=0.22"]
+baselines = ["scikit-survival>=0.22", "pycox>=0.3", "torchtuples>=0.2.2"]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -85,19 +88,24 @@ examples = [
 counterfactuals = [
     "dice-ml>=0.10",
 ]
+images = [
+    "torchvision>=0.15",
+    "Pillow>=9.0",
+]
+vit = [
+    "texgisa-survival[images]",
+    "timm>=0.9",
+]
 all = [
-    "texgisa-survival[dev,docs,examples,counterfactuals]",
+    "texgisa-survival[dev,docs,examples,counterfactuals,images,vit]",
 ]
 
 [project.urls]
-Homepage = "https://github.com/YOUR_USERNAME/texgisa-survival"
-Documentation = "https://texgisa-survival.readthedocs.io"
-Repository = "https://github.com/YOUR_USERNAME/texgisa-survival"
-Issues = "https://github.com/YOUR_USERNAME/texgisa-survival/issues"
-Changelog = "https://github.com/YOUR_USERNAME/texgisa-survival/blob/main/CHANGELOG.md"
-
-[project.scripts]
-texgisa-survival = "texgisa_survival.cli:main"
+Homepage = "https://github.com/Kunjoe7/texgisa-survival"
+Documentation = "https://github.com/Kunjoe7/texgisa-survival#readme"
+Repository = "https://github.com/Kunjoe7/texgisa-survival"
+Issues = "https://github.com/Kunjoe7/texgisa-survival/issues"
+Changelog = "https://github.com/Kunjoe7/texgisa-survival/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -112,7 +120,7 @@ exclude = ["tests*"]
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -139,7 +147,7 @@ use_parentheses = true
 ensure_newline_before_comments = true
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true

@@ -18,10 +18,10 @@ from texgisa_survival.explainers.counterfactual import (
     _target_cumhaz,
 )
 
-
 # ---------------------------------------------------------------------------
 # Hazard-scaling tests
 # ---------------------------------------------------------------------------
+
 
 class TestTargetCumhaz:
     def test_positive_extension(self):
@@ -92,10 +92,12 @@ class TestGenerateCFFromArrays:
 # Gradient-based tests
 # ---------------------------------------------------------------------------
 
+
 class TestGenerateTexgiCounterfactuals:
     @staticmethod
     def _make_model(input_dim=4, num_bins=8):
         from texgisa_survival.models.texgisa import MultiTaskSurvivalNet
+
         model = MultiTaskSurvivalNet(
             input_dim=input_dim,
             hidden_layers=[16],
@@ -138,8 +140,14 @@ class TestGenerateTexgiCounterfactuals:
 
     def test_with_dict_spec(self):
         result = generate_texgi_counterfactuals(
-            {"input_dim": 4, "num_bins": 8, "hidden": 16, "depth": 1, "dropout": 0.0,
-             "feature_names": ["a", "b", "c", "d"]},
+            {
+                "input_dim": 4,
+                "num_bins": 8,
+                "hidden": 16,
+                "depth": 1,
+                "dropout": 0.0,
+                "feature_names": ["a", "b", "c", "d"],
+            },
             np.random.randn(3, 4).astype("float32"),
             desired_extension=1.0,
             steps=5,
@@ -152,11 +160,15 @@ class TestGenerateTexgiCounterfactuals:
 # CounterfactualExplainer wrapper
 # ---------------------------------------------------------------------------
 
+
 class TestCounterfactualExplainer:
     @staticmethod
     def _make_model(input_dim=4, num_bins=8):
         from texgisa_survival.models.texgisa import MultiTaskSurvivalNet
-        return MultiTaskSurvivalNet(input_dim=input_dim, hidden_layers=[16], num_time_bins=num_bins, dropout=0.0)
+
+        return MultiTaskSurvivalNet(
+            input_dim=input_dim, hidden_layers=[16], num_time_bins=num_bins, dropout=0.0
+        )
 
     def test_scaling_method(self):
         hazards = np.random.rand(5, 10).astype("float32")
@@ -168,7 +180,9 @@ class TestCounterfactualExplainer:
         model = self._make_model()
         features = np.random.randn(3, 4).astype("float32")
         explainer = CounterfactualExplainer(model=model, feature_names=["a", "b", "c", "d"])
-        result = explainer.explain(features, method="gradient", desired_extension=1.0, steps=5, patient_indices=[0])
+        result = explainer.explain(
+            features, method="gradient", desired_extension=1.0, steps=5, patient_indices=[0]
+        )
         assert isinstance(result, TexgiCFResult)
 
     def test_invalid_method_raises(self):

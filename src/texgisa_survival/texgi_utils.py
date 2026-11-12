@@ -20,11 +20,9 @@ import pandas as pd
 from typing import Optional, Tuple, List, Dict, Any, Sequence
 
 
-def sample_extreme_code(batch_size: int,
-                        extreme_dim: int = 1,
-                        device: str = "cpu",
-                        xi: float = 0.3,
-                        beta: float = 1.0) -> torch.Tensor:
+def sample_extreme_code(
+    batch_size: int, extreme_dim: int = 1, device: str = "cpu", xi: float = 0.3, beta: float = 1.0
+) -> torch.Tensor:
     """
     Sample from Generalized Pareto Distribution (GPD) for adversarial baseline generation.
 
@@ -107,8 +105,7 @@ def aggregate_importance(phi_tbd: torch.Tensor) -> Tuple[torch.Tensor, torch.Ten
     return importance_abs, importance_dir
 
 
-def expert_penalty(phi_tbd: torch.Tensor,
-                   important_idx: Sequence[int]) -> torch.Tensor:
+def expert_penalty(phi_tbd: torch.Tensor, important_idx: Sequence[int]) -> torch.Tensor:
     """
     Expert prior penalty for TEXGI attributions.
 
@@ -165,8 +162,7 @@ def expert_penalty(phi_tbd: torch.Tensor,
 
 
 def resolve_important_feature_indices(
-    expert_config: Optional[Dict[str, Any]],
-    feat2idx: Dict[str, int]
+    expert_config: Optional[Dict[str, Any]], feat2idx: Dict[str, int]
 ) -> List[int]:
     """
     Extract important feature indices from expert configuration.
@@ -212,9 +208,9 @@ def resolve_important_feature_indices(
     return sorted(idx)
 
 
-def masked_bce_nll(hazards: torch.Tensor,
-                   labels: torch.Tensor,
-                   masks: torch.Tensor) -> torch.Tensor:
+def masked_bce_nll(
+    hazards: torch.Tensor, labels: torch.Tensor, masks: torch.Tensor
+) -> torch.Tensor:
     """
     Masked binary cross-entropy negative log-likelihood for survival hazards.
 
@@ -240,9 +236,9 @@ def masked_bce_nll(hazards: torch.Tensor,
     return masked.sum() / denom
 
 
-def topk_feature_importance(phi_tbd: torch.Tensor,
-                           feature_names: List[str],
-                           k: int = 10) -> pd.DataFrame:
+def topk_feature_importance(
+    phi_tbd: torch.Tensor, feature_names: List[str], k: int = 10
+) -> pd.DataFrame:
     """
     Get top-k most important features from TEXGI attributions.
 
@@ -263,10 +259,9 @@ def topk_feature_importance(phi_tbd: torch.Tensor,
     importance_abs, _ = aggregate_importance(phi_tbd)
     importance = importance_abs.detach().cpu().numpy()
 
-    df = pd.DataFrame({
-        "feature": feature_names,
-        "importance": importance
-    }).sort_values("importance", ascending=False)
+    df = pd.DataFrame({"feature": feature_names, "importance": importance}).sort_values(
+        "importance", ascending=False
+    )
 
     return df.reset_index(drop=True).head(k)
 
@@ -278,6 +273,8 @@ def integrated_gradients_time(
     hazard_index: int,
     M: int = 20,
     forward_kwargs: Optional[Dict[str, Any]] = None,
+    create_graph: bool = False,
+    multiply_by_inputs: bool = True,
 ) -> torch.Tensor:
     """
     Compute Integrated Gradients for a specific time bin.
@@ -299,37 +296,49 @@ def integrated_gradients_time(
         Number of integration steps
     forward_kwargs : dict, optional
         Additional keyword arguments for model forward pass
+    create_graph : bool, default False
+        Keep the graph of the gradients so that a loss built on the attributions
+        can be back-propagated to the model weights (needed for attribution priors).
+
+    multiply_by_inputs : bool, default True
+        Multiply the mean path derivative by the input-reference difference.
+        False returns the path derivative used for directional rules.
 
     Returns
     -------
     attributions : torch.Tensor of shape (B, D)
         IG attributions for the specified time bin
     """
+    if M < 1:
+        raise ValueError("M must be positive")
     assert X.shape == X_baseline.shape
     device = X.device
 
     alphas = torch.linspace(0.0, 1.0, steps=M + 1, device=device)[1:]  # exclude 0
-    X_diff = (X - X_baseline)
+    X_diff = X - X_baseline
 
     grad_terms: List[torch.Tensor] = []
     kwargs = forward_kwargs or {}
 
-    for alpha in alphas:
-        X_path = X_baseline + alpha * X_diff
-        X_path = X_path.detach().clone().requires_grad_(True)
+    # Gradients are required even if the caller is inside torch.no_grad()
+    with torch.enable_grad():
+        for alpha in alphas:
+            X_path = X_baseline + alpha * X_diff
+            X_path = X_path.detach().clone().requires_grad_(True)
 
-        hazards = model(X_path, **kwargs) if kwargs else model(X_path)
-        output = hazards[:, hazard_index]
+            hazards = model(X_path, **kwargs) if kwargs else model(X_path)
+            output = hazards[:, hazard_index]
 
-        grads = torch.autograd.grad(
-            output.sum(),
-            X_path,
-            retain_graph=False,
-            create_graph=False,
-        )[0]
-        grad_terms.append(grads)
+            grads = torch.autograd.grad(
+                output.sum(),
+                X_path,
+                retain_graph=create_graph,
+                create_graph=create_graph,
+            )[0]
+            grad_terms.append(grads)
 
-    attributions = torch.stack(grad_terms, dim=0).mean(dim=0) * X_diff
+    path_gradient = torch.stack(grad_terms, dim=0).mean(dim=0)
+    attributions = path_gradient * X_diff if multiply_by_inputs else path_gradient
     return attributions
 
 
@@ -340,6 +349,8 @@ def texgi_time_series(
     M: int = 20,
     t_sample: Optional[int] = None,
     forward_kwargs: Optional[Dict[str, Any]] = None,
+    create_graph: bool = False,
+    multiply_by_inputs: bool = True,
 ) -> torch.Tensor:
     """
     Compute TEXGI attributions per time-bin.
@@ -398,6 +409,8 @@ def texgi_time_series(
             hazard_index=t,
             M=M,
             forward_kwargs=forward_kwargs,
+            create_graph=create_graph,
+            multiply_by_inputs=multiply_by_inputs,
         )
         phi_list.append(ig_t)
 
@@ -430,9 +443,9 @@ def standardize_features(X: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, t
     return X_standardized, mu, std
 
 
-def destandardize_features(X_std: torch.Tensor,
-                          mu: torch.Tensor,
-                          std: torch.Tensor) -> torch.Tensor:
+def destandardize_features(
+    X_std: torch.Tensor, mu: torch.Tensor, std: torch.Tensor
+) -> torch.Tensor:
     """
     Convert standardized features back to original scale.
 

@@ -15,7 +15,7 @@ First off, thank you for considering contributing to DHAI Survival! It's people 
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to texgisa-survival@example.com.
+Contributors should communicate respectfully and describe reproducible technical issues. Use the [public issue tracker](https://github.com/Kunjoe7/texgisa-survival/issues) for project discussions.
 
 ## Getting Started
 
@@ -64,7 +64,7 @@ Unsure where to begin? You can start by looking through these issues:
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/your-username/texgisa_survival.git
+   git clone https://github.com/Kunjoe7/texgisa-survival.git
    cd texgisa_survival
    ```
 
@@ -309,7 +309,7 @@ Releases are managed by maintainers following semantic versioning:
 
 - GitHub Issues for bug reports and feature requests
 - GitHub Discussions for general questions
-- Email: texgisa-survival@example.com
+- Email: the public issue tracker at https://github.com/Kunjoe7/texgisa-survival/issues
 
 ### Acknowledgments
 

@@ -1,0 +1,3179 @@
+{
+ "TexGISa": [
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  }
+ ],
+ "Cox": [
+  {
+   "pen": 0.0,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.0,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.0001,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.0001,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.001,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.001,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.003,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.003,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.01,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.01,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.03,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.03,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.1,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.1,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.3,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.3,
+   "l1": 0.5
+  },
+  {
+   "pen": 1.0,
+   "l1": 0.0
+  },
+  {
+   "pen": 1.0,
+   "l1": 0.5
+  },
+  {
+   "pen": 3.0,
+   "l1": 0.0
+  },
+  {
+   "pen": 3.0,
+   "l1": 0.5
+  },
+  {
+   "pen": 3e-05,
+   "l1": 0.0
+  },
+  {
+   "pen": 3e-05,
+   "l1": 0.25
+  },
+  {
+   "pen": 3e-05,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.0005,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.0005,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.0005,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.002,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.002,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.002,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.005,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.005,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.005,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.02,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.02,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.05,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.05,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.2,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.2,
+   "l1": 0.5
+  },
+  {
+   "pen": 0.5,
+   "l1": 0.0
+  },
+  {
+   "pen": 0.5,
+   "l1": 0.25
+  },
+  {
+   "pen": 0.5,
+   "l1": 0.5
+  },
+  {
+   "pen": 2.0,
+   "l1": 0.0
+  },
+  {
+   "pen": 2.0,
+   "l1": 0.25
+  },
+  {
+   "pen": 2.0,
+   "l1": 0.5
+  },
+  {
+   "pen": 10.0,
+   "l1": 0.0
+  },
+  {
+   "pen": 10.0,
+   "l1": 0.25
+  },
+  {
+   "pen": 10.0,
+   "l1": 0.5
+  }
+ ],
+ "CoxTime": [
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  }
+ ],
+ "DeepSurv": [
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 64
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  }
+ ],
+ "DeepHit": [
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.8,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.5,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.5,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.2,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.8,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.2,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.2,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.5
+  },
+  {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.1
+  }
+ ]
+}

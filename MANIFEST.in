@@ -1,0 +1,8 @@
+include README.md LICENSE CHANGELOG.md CITATION.cff
+include SCIENTIFIC_NOTES.md API_REFERENCE.md BACKENDS.md CONTRIBUTING.md EXTENSIONS_SINCE_ICDM.md
+recursive-include .github/workflows *.yml
+recursive-include tests *.py
+recursive-include examples *.py
+recursive-include benchmarks *.py *.json *.md
+recursive-include skills *.md
+global-exclude *.py[cod] __pycache__ *.pt *.pkl

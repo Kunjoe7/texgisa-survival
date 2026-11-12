@@ -11,9 +11,7 @@ from texgisa_survival.data.manager import DataManager
 
 @pytest.fixture
 def sample_df():
-    return pd.DataFrame(
-        {"duration": [10, 20, 30], "event": [1, 0, 1], "age": [50, 60, 70]}
-    )
+    return pd.DataFrame({"duration": [10, 20, 30], "event": [1, 0, 1], "age": [50, 60, 70]})
 
 
 class TestDataManager:

@@ -43,11 +43,12 @@ from .explainers.counterfactual import (
 # Optional preprocessing modules
 try:
     from .preprocessing import TabularProcessor
+
     _has_preprocessing = True
 except ImportError:
     _has_preprocessing = False
 
-__version__ = "2.0.0"
+__version__ = "2.2.0"
 
 __all__ = [
     # Main API
@@ -89,3 +90,5 @@ __all__ = [
 
 if _has_preprocessing:
     __all__.append("TabularProcessor")
+
+# The optional recipes and baselines are imported on explicit user request.

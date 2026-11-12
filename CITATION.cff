@@ -1,57 +1,62 @@
-# This CITATION.cff file was generated with cffinit.
-# Visit https://bit.ly/cffinit to generate yours today!
-
 cff-version: 1.2.0
-title: >-
-  TexGISa: Time-dependent EXtreme Gradient Integration for
-  Survival Analysis
+title: "texgisa-survival: Interpretable and Interactive Deep Discrete-Time Survival Analysis"
 message: >-
   If you use this software, please cite it using the
-  metadata from this file.
+  metadata from this file, and cite the method paper below.
 type: software
 authors:
-  - family-names: DHAI Lab
-    affiliation: DHAI Laboratory
-identifiers:
-  - type: url
-    value: 'https://github.com/dhai-lab/texgisa_survival'
-    description: GitHub Repository
-repository-code: 'https://github.com/dhai-lab/texgisa_survival'
-url: 'https://github.com/dhai-lab/texgisa_survival'
+  - family-names: Qin
+    given-names: Xinyu
+    affiliation: Baylor University
+    email: Xinyu_Qin1@baylor.edu
+  - family-names: Yu
+    given-names: Ruiheng
+    affiliation: Florida State University
+    email: ry26@fsu.edu
+  - family-names: Li
+    given-names: Yan
+    affiliation: University of Toronto
+  - family-names: Wang
+    given-names: Lu
+    affiliation: Baylor University
+    email: Lu_Wang@baylor.edu
+repository-code: 'https://github.com/Kunjoe7/texgisa-survival'
+url: 'https://github.com/Kunjoe7/texgisa-survival'
 abstract: >-
-  TexGISa is a novel deep learning framework for survival
-  analysis that combines the predictive power of neural
-  networks with interpretability through Time-dependent
-  EXtreme Gradient Integration (TEXGI). Unlike traditional
-  black-box deep learning models, TexGISa provides
-  time-dependent feature importance via Expected Gradients,
-  expert knowledge integration during model training,
-  interpretable predictions with attribution explanations,
-  and discrete-time hazard modeling for flexible survival
-  prediction.
+  A PyTorch library for discrete-time deep survival analysis with
+  time-dependent feature attributions computed against extreme baselines
+  (TEXGI) and attribution priors that let domain experts shape training.
 keywords:
   - survival analysis
   - deep learning
-  - interpretability
   - explainable AI
-  - feature importance
-  - medical AI
-  - time-to-event analysis
-  - neural networks
+  - interactive machine learning
 license: MIT
-version: 1.0.0
-date-released: '2024-09-01'
+version: 2.2.0
+date-released: 2026-11-12
 preferred-citation:
   type: conference-paper
   authors:
-    - family-names: DHAI Lab
-      affiliation: DHAI Laboratory
+    - family-names: Qin
+      given-names: Xinyu
+    - family-names: Yu
+      given-names: Ruiheng
+    - family-names: Khayati
+      given-names: Armin
+    - family-names: Qiu
+      given-names: Zixiao
+    - family-names: Zou
+      given-names: Gengyi
+    - family-names: Li
+      given-names: Yan
+    - family-names: Wang
+      given-names: Lu
   title: >-
-    TexGISa: Interpretable and Interactive Deep Survival
-    Analysis with Time-dependent Extreme Gradient Integration
+    Interpretable and Interactive Deep Survival Analysis with
+    Time-dependent EXtreme Gradient Integration
   collection-title: >-
-    Proceedings of the IEEE International Conference on Data
-    Mining (ICDM)
-  year: 2024
-  conference:
-    name: IEEE International Conference on Data Mining
+    2025 IEEE International Conference on Data Mining (ICDM)
+  year: 2025
+  start: 673
+  end: 682
+  doi: 10.1109/ICDM65498.2025.00075

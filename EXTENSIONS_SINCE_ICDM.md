@@ -1,0 +1,3 @@
+# Software changes since the method publication
+
+Relative to the method described by Qin et al. (ICDM2025), the review candidate adds a fitted multi-output recipe interface, explicit risk/curve/point semantics, eight experiment-backed own-model recipes, two calibration choices, train-only split/epoch/config provenance, and isolated optional baseline/author-CLI invocation. The legacy estimator and TEXGI functions remain available. Benchmark replay and table reconstruction are supplied separately. These are source-verified software capabilities, not a claim that all changes were independently isolated in accuracy ablations.

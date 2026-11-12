@@ -24,14 +24,15 @@ import pandas as pd
 import torch
 import torch.nn as nn
 
-
 # ---------------------------------------------------------------------------
 # Data classes
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class CFResult:
     """Result of hazard-scaling counterfactual generation."""
+
     table: pd.DataFrame
     summary: Dict[str, Any]
     save_path: Optional[str] = None
@@ -40,6 +41,7 @@ class CFResult:
 @dataclass
 class TexgiCFResult:
     """Result of gradient-based counterfactual generation."""
+
     table: pd.DataFrame
     summary: Dict[str, Any]
 
@@ -47,6 +49,7 @@ class TexgiCFResult:
 # ---------------------------------------------------------------------------
 # Internal helpers (hazard-scaling)
 # ---------------------------------------------------------------------------
+
 
 def _select_interval(hazards: np.ndarray, interval: Optional[int]):
     """Pick the target hazard interval per sample."""
@@ -121,7 +124,9 @@ def _feature_change_suggestions(
             diff = neighbor_raw - feature_df.iloc[idx]
             non_zero = diff.replace(0.0, np.nan).dropna()
             if non_zero.empty:
-                text = "Lower-risk similar case found; maintain current plan with enhanced follow-up."
+                text = (
+                    "Lower-risk similar case found; maintain current plan with enhanced follow-up."
+                )
             else:
                 top_feats = non_zero.abs().sort_values(ascending=False).head(3)
                 parts = []
@@ -137,7 +142,9 @@ def _feature_change_suggestions(
                     "suggestion_rank": rank,
                     "reference_id": neighbor_idx,
                     "current_risk": float(target_risk),
-                    "reference_risk": float(risk_arr[neighbor_idx] if neighbor_idx < risk_arr.size else target_risk),
+                    "reference_risk": float(
+                        risk_arr[neighbor_idx] if neighbor_idx < risk_arr.size else target_risk
+                    ),
                     "suggested_changes": text,
                 }
             )
@@ -220,6 +227,7 @@ def _genetic_search(
 # ---------------------------------------------------------------------------
 # Public API — hazard-scaling counterfactuals
 # ---------------------------------------------------------------------------
+
 
 def generate_cf_from_arrays(
     hazards,
@@ -313,7 +321,11 @@ def generate_cf_from_arrays(
 
         top_features = ""
         if feature_names:
-            feats = ", ".join(feature_names[:3]) if len(feature_names) >= 3 else ", ".join(feature_names)
+            feats = (
+                ", ".join(feature_names[:3])
+                if len(feature_names) >= 3
+                else ", ".join(feature_names)
+            )
             top_features = f" Priority focus: {feats}."
 
         t_int = int(interval_idx[i] + 1)
@@ -357,10 +369,20 @@ def generate_cf_from_arrays(
     cf_table = pd.DataFrame(suggestions)
     summary = {
         "interval": interval or "peak",
-        "mean_risk": float(np.mean([s.get("risk_score", 0.0) for s in suggestions])) if suggestions else 0.0,
+        "mean_risk": (
+            float(np.mean([s.get("risk_score", 0.0) for s in suggestions])) if suggestions else 0.0
+        ),
         "mean_target_hazard": float(np.mean(target_vals)) if len(target_vals) else 0.0,
-        "mean_achieved_extension": float(np.mean([s.get("estimated_extension", 0.0) for s in suggestions])) if suggestions else 0.0,
-        "avg_feature_references": float(np.mean([s.get("reference_risk", 0.0) for s in suggestions])) if suggestions else 0.0,
+        "mean_achieved_extension": (
+            float(np.mean([s.get("estimated_extension", 0.0) for s in suggestions]))
+            if suggestions
+            else 0.0
+        ),
+        "avg_feature_references": (
+            float(np.mean([s.get("reference_risk", 0.0) for s in suggestions]))
+            if suggestions
+            else 0.0
+        ),
     }
 
     if save_path:
@@ -384,7 +406,11 @@ def run_cf_simulation(
             x, _, _, mod_mask = batch
         else:
             x = batch["x"] if isinstance(batch, dict) else getattr(batch, "x")
-            mod_mask = batch.get("mod_mask") if isinstance(batch, dict) else getattr(batch, "mod_mask", None)
+            mod_mask = (
+                batch.get("mod_mask")
+                if isinstance(batch, dict)
+                else getattr(batch, "mod_mask", None)
+            )
         with torch.no_grad():
             hz = model(x, mod_mask)
         hazards_list.append(hz.cpu())
@@ -403,6 +429,7 @@ def run_cf_simulation(
 # ---------------------------------------------------------------------------
 # Internal helpers (gradient-based)
 # ---------------------------------------------------------------------------
+
 
 def _to_feature_frame(features, feature_names: Sequence[str]) -> pd.DataFrame:
     if isinstance(features, pd.DataFrame):
@@ -479,6 +506,7 @@ def _optimize_single(
 # Public API — gradient-based counterfactuals
 # ---------------------------------------------------------------------------
 
+
 def generate_texgi_counterfactuals(
     model_or_spec,
     features,
@@ -537,6 +565,7 @@ def generate_texgi_counterfactuals(
     -------
     TexgiCFResult
     """
+
     def _estimate_time_gain(extension_intervals: float) -> float:
         if time_bin_edges is None:
             return float("nan")
@@ -572,8 +601,12 @@ def generate_texgi_counterfactuals(
         return TexgiCFResult(pd.DataFrame(), {"error": "No valid patients provided."})
 
     stats_df = _stats_frame(feature_stats, feat_names)
-    bounds_min_raw = stats_df.get("min") if "min" in stats_df else pd.Series(np.nan, index=feat_names)
-    bounds_max_raw = stats_df.get("max") if "max" in stats_df else pd.Series(np.nan, index=feat_names)
+    bounds_min_raw = (
+        stats_df.get("min") if "min" in stats_df else pd.Series(np.nan, index=feat_names)
+    )
+    bounds_max_raw = (
+        stats_df.get("max") if "max" in stats_df else pd.Series(np.nan, index=feat_names)
+    )
 
     bounds_min_arr = bounds_min_raw.to_numpy(dtype=float)
     bounds_max_arr = bounds_max_raw.to_numpy(dtype=float)
@@ -605,14 +638,26 @@ def generate_texgi_counterfactuals(
     suggestions = []
     patient_notes = []
     for idx in idx_subset:
-        base_vec = torch.tensor(feat_df.iloc[idx].to_numpy(dtype=float), dtype=torch.float32).unsqueeze(0)
+        base_vec = torch.tensor(
+            feat_df.iloc[idx].to_numpy(dtype=float), dtype=torch.float32
+        ).unsqueeze(0)
         with torch.no_grad():
-            base_haz = model(base_vec).sum().item() if hazards_arr is None else float(hazards_arr[idx].sum())
+            base_haz = (
+                model(base_vec).sum().item()
+                if hazards_arr is None
+                else float(hazards_arr[idx].sum())
+            )
 
         target_ch = _target_cumhaz(base_haz, horizon=num_bins, desired_extension=desired_extension)
         best_vec, base_ch, achieved_ch = _optimize_single(
-            model, base_vec, bounds_min_t, bounds_max_t, target_ch,
-            steps=steps, lr=lr, frozen_mask=frozen_mask,
+            model,
+            base_vec,
+            bounds_min_t,
+            bounds_max_t,
+            target_ch,
+            steps=steps,
+            lr=lr,
+            frozen_mask=frozen_mask,
         )
 
         delta = (best_vec - base_vec).squeeze(0).detach().cpu().numpy()
@@ -670,8 +715,12 @@ def generate_texgi_counterfactuals(
         "mean_current_cumhaz": float(table["current_cumhaz"].mean()) if not table.empty else 0.0,
         "mean_target_cumhaz": float(table["target_cumhaz"].mean()) if not table.empty else 0.0,
         "mean_achieved_cumhaz": float(table["achieved_cumhaz"].mean()) if not table.empty else 0.0,
-        "mean_estimated_extension": float(table["estimated_extension"].mean()) if not table.empty else 0.0,
-        "mean_estimated_time_gain": float(table["estimated_extension_time"].mean()) if not table.empty else float("nan"),
+        "mean_estimated_extension": (
+            float(table["estimated_extension"].mean()) if not table.empty else 0.0
+        ),
+        "mean_estimated_time_gain": (
+            float(table["estimated_extension_time"].mean()) if not table.empty else float("nan")
+        ),
         "time_unit": time_unit,
         "patient_notes": patient_notes,
     }
@@ -699,6 +748,7 @@ def _load_model_from_spec(spec: Dict[str, Any]) -> nn.Module:
 # ---------------------------------------------------------------------------
 # Unified wrapper
 # ---------------------------------------------------------------------------
+
 
 class CounterfactualExplainer:
     """Unified interface for counterfactual explanations.
@@ -761,7 +811,9 @@ class CounterfactualExplainer:
         if method == "scaling":
             if hazards is None:
                 if self.model is None or features is None:
-                    raise ValueError("Either hazards or (model + features) must be provided for scaling method.")
+                    raise ValueError(
+                        "Either hazards or (model + features) must be provided for scaling method."
+                    )
                 features_t = torch.as_tensor(np.asarray(features, dtype="float32"))
                 with torch.no_grad():
                     hazards = self.model(features_t).cpu()
@@ -770,7 +822,11 @@ class CounterfactualExplainer:
                 patient_indices=patient_indices,
                 desired_extension=desired_extension,
                 feature_names=self.feature_names,
-                feature_df=pd.DataFrame(np.asarray(features), columns=self.feature_names) if features is not None and self.feature_names else None,
+                feature_df=(
+                    pd.DataFrame(np.asarray(features), columns=self.feature_names)
+                    if features is not None and self.feature_names
+                    else None
+                ),
                 **kwargs,
             )
         elif method == "gradient":

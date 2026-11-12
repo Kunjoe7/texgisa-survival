@@ -12,31 +12,31 @@ from texgisa_survival.metrics import (
     concordance_index,
     brier_score,
     integrated_brier_score,
-    cumulative_dynamic_auc
+    cumulative_dynamic_auc,
 )
 
 
 class TestConcordanceIndex:
     """Test suite for concordance index"""
-    
+
     def test_perfect_concordance(self):
-        """Test perfect concordance"""
+        """Test perfect concordance: the earliest event has the highest risk"""
         y_true = np.array([1, 2, 3, 4, 5])
-        y_pred = np.array([1, 2, 3, 4, 5])
+        y_pred = np.array([5, 4, 3, 2, 1])  # risk scores
         e = np.ones(5)
-        
+
         c_index = concordance_index(y_true, y_pred, e)
         assert c_index == 1.0
-    
+
     def test_reverse_concordance(self):
-        """Test reverse concordance"""
+        """Test reverse concordance: the earliest event has the lowest risk"""
         y_true = np.array([1, 2, 3, 4, 5])
-        y_pred = np.array([5, 4, 3, 2, 1])
+        y_pred = np.array([1, 2, 3, 4, 5])  # risk scores
         e = np.ones(5)
-        
+
         c_index = concordance_index(y_true, y_pred, e)
         assert c_index == 0.0
-    
+
     def test_random_concordance(self):
         """Test random concordance (should be around 0.5)"""
         np.random.seed(42)
@@ -44,19 +44,19 @@ class TestConcordanceIndex:
         y_true = np.random.exponential(1, n)
         y_pred = np.random.randn(n)
         e = np.random.binomial(1, 0.7, n)
-        
+
         c_index = concordance_index(y_true, y_pred, e)
         assert 0.4 <= c_index <= 0.6
-    
+
     def test_with_censoring(self):
         """Test concordance with censored data"""
         y_true = np.array([1, 2, 3, 4, 5])
         y_pred = np.array([1, 2, 3, 4, 5])
         e = np.array([1, 0, 1, 0, 1])
-        
+
         c_index = concordance_index(y_true, y_pred, e)
         assert 0 <= c_index <= 1
-    
+
     def test_invalid_input(self):
         """Test with invalid input"""
         with pytest.raises(ValueError):
@@ -65,7 +65,7 @@ class TestConcordanceIndex:
 
 class TestBrierScore:
     """Test suite for Brier score"""
-    
+
     def test_perfect_prediction(self):
         """Test perfect prediction (Brier score should be low)"""
         y_true = np.array([10, 20, 30, 40, 50])
@@ -117,13 +117,15 @@ class TestIntegratedBrierScore:
         times = np.array([15, 25, 35, 45])
 
         # Predictions at different times
-        y_pred = np.array([
-            [0.9, 0.7, 0.5, 0.3],  # Sample 1
-            [0.8, 0.6, 0.4, 0.2],  # Sample 2
-            [0.7, 0.5, 0.3, 0.1],  # Sample 3
-            [0.6, 0.4, 0.2, 0.1],  # Sample 4
-            [0.5, 0.3, 0.1, 0.0],  # Sample 5
-        ])
+        y_pred = np.array(
+            [
+                [0.9, 0.7, 0.5, 0.3],  # Sample 1
+                [0.8, 0.6, 0.4, 0.2],  # Sample 2
+                [0.7, 0.5, 0.3, 0.1],  # Sample 3
+                [0.6, 0.4, 0.2, 0.1],  # Sample 4
+                [0.5, 0.3, 0.1, 0.0],  # Sample 5
+            ]
+        )
 
         ibs = integrated_brier_score(y_true, y_pred, e, times)
         assert 0 <= ibs <= 1
@@ -143,7 +145,7 @@ class TestIntegratedBrierScore:
 
 class TestCumulativeDynamicAUC:
     """Test suite for cumulative dynamic AUC"""
-    
+
     def test_perfect_discrimination(self):
         """Test perfect discrimination (AUC = 1)"""
         y_true = np.array([10, 20, 30, 40, 50])
@@ -151,11 +153,11 @@ class TestCumulativeDynamicAUC:
         # Perfect risk scores
         y_pred = np.array([5, 4, 3, 2, 1])
         times = np.array([25, 35])
-        
+
         auc_scores = cumulative_dynamic_auc(y_true, y_pred, e, times)
         assert len(auc_scores) == len(times)
         assert all(0.8 <= auc <= 1.0 for auc in auc_scores)
-    
+
     def test_random_discrimination(self):
         """Test random discrimination (AUC ≈ 0.5)"""
         np.random.seed(42)
@@ -164,18 +166,18 @@ class TestCumulativeDynamicAUC:
         e = np.ones(n)
         y_pred = np.random.randn(n)
         times = np.array([0.5, 1.0, 1.5])
-        
+
         auc_scores = cumulative_dynamic_auc(y_true, y_pred, e, times)
         assert len(auc_scores) == len(times)
         assert all(0.3 <= auc <= 0.7 for auc in auc_scores)
-    
+
     def test_with_censoring(self):
         """Test AUC with censored data"""
         y_true = np.array([10, 20, 30, 40, 50])
         e = np.array([1, 0, 1, 0, 1])
         y_pred = np.array([5, 4, 3, 2, 1])
         times = np.array([25, 35])
-        
+
         auc_scores = cumulative_dynamic_auc(y_true, y_pred, e, times)
         assert len(auc_scores) == len(times)
         assert all(0 <= auc <= 1 for auc in auc_scores)

@@ -20,8 +20,8 @@ import torch.nn.functional as F
 from typing import Optional, Tuple, Dict, Any, List, Sequence
 from torch.utils.data import DataLoader
 
-
 # ---------------------- Advanced Generator with GPD Sampling ----------------------
+
 
 class TabularGeneratorWithRealInput(nn.Module):
     """
@@ -33,8 +33,15 @@ class TabularGeneratorWithRealInput(nn.Module):
     The generator outputs a baseline lying near the data manifold but
     shifted toward an extreme direction encoded by e.
     """
-    def __init__(self, input_dim: int, latent_dim: int = 16, extreme_dim: int = 1,
-                 hidden: int = 256, depth: int = 3):
+
+    def __init__(
+        self,
+        input_dim: int,
+        latent_dim: int = 16,
+        extreme_dim: int = 1,
+        hidden: int = 256,
+        depth: int = 3,
+    ):
         super().__init__()
         D = input_dim + latent_dim + extreme_dim
         layers = []
@@ -51,8 +58,9 @@ class TabularGeneratorWithRealInput(nn.Module):
         return self.net(torch.cat([x, z, e], dim=1))
 
 
-def sample_extreme_code(batch_size: int, extreme_dim: int = 1, device: str = "cpu",
-                        xi: float = 0.3, beta: float = 1.0) -> torch.Tensor:
+def sample_extreme_code(
+    batch_size: int, extreme_dim: int = 1, device: str = "cpu", xi: float = 0.3, beta: float = 1.0
+) -> torch.Tensor:
     """
     Sample from Generalized Pareto Distribution (GPD) using inverse CDF.
 
@@ -86,6 +94,7 @@ def sample_extreme_code(batch_size: int, extreme_dim: int = 1, device: str = "cp
 
 # ---------------------- Standardization Utilities ----------------------
 
+
 @torch.no_grad()
 def _standardize_fit(X: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute mean and std for standardization."""
@@ -106,6 +115,7 @@ def _destandardize(Xs: torch.Tensor, mu: torch.Tensor, std: torch.Tensor) -> tor
 
 # ---------------------- Advanced Generator Training ----------------------
 
+
 def train_adv_generator(
     model: nn.Module,
     X_tr: torch.Tensor,
@@ -119,7 +129,7 @@ def train_adv_generator(
     alpha_dist: float = 1.0,
     device: Optional[str] = None,
     modality_mask: Optional[torch.Tensor] = None,
-    checkpoint_path: str = "texgisa_generator.pt",
+    checkpoint_path: Optional[str] = None,
 ) -> Tuple[TabularGeneratorWithRealInput, Dict[str, torch.Tensor]]:
     """
     Train a generator G to produce adversarial extreme baselines.
@@ -156,8 +166,8 @@ def train_adv_generator(
         Device for computation
     modality_mask : torch.Tensor, optional
         Modality availability mask
-    checkpoint_path : str
-        Path to save generator checkpoint
+    checkpoint_path : str, optional
+        Explicit path to save a generator checkpoint. No disk cache by default.
 
     Returns
     -------
@@ -168,6 +178,10 @@ def train_adv_generator(
     """
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device).eval()  # freeze model during G training
+    # Freeze the survival model's weights; gradients must still flow *through* it to G.
+    model_requires_grad = [p.requires_grad for p in model.parameters()]
+    for p in model.parameters():
+        p.requires_grad_(False)
 
     G = TabularGeneratorWithRealInput(X_tr.shape[1], latent_dim, extreme_dim).to(device)
     opt = torch.optim.Adam(G.parameters(), lr=lr)
@@ -180,7 +194,7 @@ def train_adv_generator(
 
     steps_per_epoch = max(1, N // batch_size)
 
-    best_loss = float('inf')
+    best_loss = float("inf")
 
     for ep in range(1, epochs + 1):
         ep_loss = 0.0
@@ -190,7 +204,9 @@ def train_adv_generator(
             xb = X_std[idx[sl:sr]]  # standardized input
 
             z = torch.randn(xb.size(0), latent_dim, device=device)
-            e = sample_extreme_code(xb.size(0), extreme_dim=extreme_dim, device=device, xi=0.3, beta=1.0)
+            e = sample_extreme_code(
+                xb.size(0), extreme_dim=extreme_dim, device=device, xi=0.3, beta=1.0
+            )
 
             x_adv = G(xb, z, e)  # standardized baseline
             x_adv_real = _destandardize(x_adv, mu.to(device), std.to(device))  # back to real space
@@ -200,12 +216,17 @@ def train_adv_generator(
             if modality_mask is not None:
                 mask_batch = modality_mask[idx[sl:sr]]
 
-            with torch.no_grad():
-                if mask_batch is not None and hasattr(model, 'forward') and 'modality_mask' in model.forward.__code__.co_varnames:
-                    hazards = model(x_adv_real, modality_mask=mask_batch)
-                else:
-                    hazards = model(x_adv_real)
-                risk = hazards.sum(dim=1)  # larger -> earlier event
+            # No torch.no_grad() here: the risk term must back-propagate into G,
+            # otherwise G only minimizes the distance term and collapses to x_adv = x.
+            if (
+                mask_batch is not None
+                and hasattr(model, "forward")
+                and "modality_mask" in model.forward.__code__.co_varnames
+            ):
+                hazards = model(x_adv_real, modality_mask=mask_batch)
+            else:
+                hazards = model(x_adv_real)
+            risk = hazards.sum(dim=1)  # larger -> earlier event
 
             # Proximity in standardized space
             dist = (x_adv - xb).pow(2).sum(dim=1)
@@ -224,13 +245,14 @@ def train_adv_generator(
         if avg_loss < best_loss:
             best_loss = avg_loss
             # Save checkpoint
-            try:
+            if checkpoint_path is not None:
                 torch.save(G.state_dict(), checkpoint_path)
-            except Exception:
-                pass
 
         if ep % 50 == 0 or ep == 1:
             print(f"[Generator Training] Epoch {ep:03d}  Loss={avg_loss:.4f}")
+
+    for p, flag in zip(model.parameters(), model_requires_grad):
+        p.requires_grad_(flag)
 
     ref_stats = {"mu": mu.to(device), "std": std.to(device)}
     return G, ref_stats
@@ -238,17 +260,22 @@ def train_adv_generator(
 
 # ---------------------- Time-dependent Integrated Gradients ----------------------
 
+
 def integrated_gradients_time(
     f: nn.Module,
-    X: torch.Tensor,           # [B, D] (real space, requires_grad can be True)
+    X: torch.Tensor,  # [B, D] (real space, requires_grad can be True)
     X_baseline: torch.Tensor,  # [B, D] (real space)
-    hazard_index: int,         # target time-bin
+    hazard_index: int,  # target time-bin
     M: int = 20,
     forward_kwargs: Optional[Dict[str, Any]] = None,
+    create_graph: bool = False,
 ) -> torch.Tensor:
     """
     Compute Integrated Gradients for one time index t along the straight path
     from baseline to input.
+
+    Set ``create_graph=True`` when the attributions enter a training loss
+    (attribution priors); otherwise they carry no gradient to the model weights.
 
     Parameters
     ----------
@@ -273,7 +300,7 @@ def integrated_gradients_time(
     assert X.shape == X_baseline.shape
     device = X.device
     alphas = torch.linspace(0.0, 1.0, steps=M + 1, device=device)[1:]  # exclude 0
-    Xdiff = (X - X_baseline)
+    Xdiff = X - X_baseline
 
     atts_terms: List[torch.Tensor] = []
     kwargs = forward_kwargs or {}
@@ -282,18 +309,21 @@ def integrated_gradients_time(
     training_mode = f.training
     f.eval()
 
-    for a in alphas:
-        Xpath = X_baseline + a * Xdiff
-        Xpath.requires_grad_(True)
-        hazards = f(Xpath, **kwargs) if kwargs else f(Xpath)  # [B, T]
-        out = hazards[:, hazard_index]  # focus on bin t
-        grads = torch.autograd.grad(
-            out.sum(),
-            Xpath,
-            retain_graph=False,
-            create_graph=False,
-        )[0]
-        atts_terms.append(grads)
+    # Gradients are required even if the caller is inside torch.no_grad()
+    with torch.enable_grad():
+        for a in alphas:
+            Xpath = X_baseline + a * Xdiff
+            if not Xpath.requires_grad:
+                Xpath = Xpath.detach().requires_grad_(True)
+            hazards = f(Xpath, **kwargs) if kwargs else f(Xpath)  # [B, T]
+            out = hazards[:, hazard_index]  # focus on bin t
+            grads = torch.autograd.grad(
+                out.sum(),
+                Xpath,
+                retain_graph=create_graph,
+                create_graph=create_graph,
+            )[0]
+            atts_terms.append(grads)
 
     f.train(training_mode)  # Restore original mode
 
@@ -311,6 +341,7 @@ def texgi_time_series(
     extreme_dim: int = 1,
     t_sample: Optional[int] = None,
     forward_kwargs: Optional[Dict[str, Any]] = None,
+    create_graph: bool = False,
 ) -> torch.Tensor:
     """
     Compute TEXGI per time-bin, returning phi with shape [T, B, D].
@@ -376,6 +407,7 @@ def texgi_time_series(
     # Select time bins to compute (subsample for efficiency if requested)
     if t_sample is not None and t_sample > 0 and t_sample < T:
         import math
+
         step = max(1, math.floor(T / t_sample))
         t_indices = list(range(0, T, step))[:t_sample]
     else:
@@ -390,6 +422,7 @@ def texgi_time_series(
             hazard_index=t,
             M=M,
             forward_kwargs=forward_kwargs,
+            create_graph=create_graph,
         )
         phi_list.append(ig_t)
 
@@ -399,6 +432,7 @@ def texgi_time_series(
 
 
 # ---------------------- Attribution Temporal Smoothness ----------------------
+
 
 def attribution_temporal_l1(phi_tbd: torch.Tensor) -> torch.Tensor:
     """
@@ -426,6 +460,7 @@ def attribution_temporal_l1(phi_tbd: torch.Tensor) -> torch.Tensor:
 
 # ---------------------- Expert Penalty with L2 Norm ----------------------
 
+
 def _aggregate_importance(phi_tbd: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     """
     Aggregate attributions across time and batch dimensions.
@@ -443,13 +478,12 @@ def _aggregate_importance(phi_tbd: torch.Tensor) -> Tuple[torch.Tensor, torch.Te
         Per-feature directional mean = mean_{t,b} phi -> [D]
     """
     imp_abs = phi_tbd.abs().mean(dim=(0, 1))  # [D]
-    imp_dir = phi_tbd.mean(dim=(0, 1))        # [D]
+    imp_dir = phi_tbd.mean(dim=(0, 1))  # [D]
     return imp_abs, imp_dir
 
 
 def _resolve_important_feature_indices(
-    expert_config: Optional[Dict[str, Any]],
-    feat2idx: Dict[str, int]
+    expert_config: Optional[Dict[str, Any]], feat2idx: Dict[str, int]
 ) -> List[int]:
     """
     Extract the set I (important features) from the expert configuration.
@@ -478,7 +512,9 @@ def _resolve_important_feature_indices(
             names.extend(str(v) for v in val)
 
     # Backward compatibility: treat old rule entries with relation >=mean as important
-    for rule in expert_config.get("rules", []) if isinstance(expert_config.get("rules"), list) else []:
+    for rule in (
+        expert_config.get("rules", []) if isinstance(expert_config.get("rules"), list) else []
+    ):
         if not isinstance(rule, dict):
             continue
         fname = rule.get("feature")
@@ -540,6 +576,7 @@ def expert_penalty(phi_tbd: torch.Tensor, important_idx: Sequence[int]) -> torch
 
 # ---------------------- MySATrainer Class ----------------------
 
+
 class MySATrainer:
     """
     Advanced trainer for TEXGISA model with better abstraction and efficiency.
@@ -574,13 +611,14 @@ class MySATrainer:
         ref_stats: Optional[Dict[str, torch.Tensor]] = None,
         X_train_ref: Optional[torch.Tensor] = None,
         modality_mask_ref: Optional[torch.Tensor] = None,
+        generator_checkpoint: Optional[str] = None,
     ):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model.to(self.device)
         self.opt = torch.optim.Adam(self.model.parameters(), lr=lr)
         self.sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            self.opt, mode="min", factor=0.5, patience=5, verbose=False
-        )
+            self.opt, mode="min", factor=0.5, patience=5
+        )  # no `verbose`: removed from recent PyTorch releases
 
         self.lambda_smooth = float(lambda_smooth)
         self.lambda_expert = float(lambda_expert)
@@ -600,6 +638,7 @@ class MySATrainer:
         self.gen_alpha_dist = float(gen_alpha_dist)
         self.X_train_ref = X_train_ref
         self.modality_mask_ref = modality_mask_ref
+        self.generator_checkpoint = generator_checkpoint
         self.ig_batch_samples = int(ig_batch_samples)
         self.ig_time_subsample = int(ig_time_subsample) if ig_time_subsample else None
 
@@ -610,17 +649,19 @@ class MySATrainer:
         if self.G is not None:
             return
 
-        # Try to load checkpoint if exists
+        # Loading a shared working-directory cache can contaminate later folds.
+        # Reuse is opt-in through an explicitly supplied checkpoint path.
         import os
-        ckpt_path = "texgisa_generator.pt"
-        if os.path.exists(ckpt_path):
+
+        ckpt_path = self.generator_checkpoint
+        if ckpt_path is not None and os.path.exists(ckpt_path):
             try:
                 self.G = TabularGeneratorWithRealInput(
-                    self.X_train_ref.shape[1],
-                    self.latent_dim,
-                    self.extreme_dim
+                    self.X_train_ref.shape[1], self.latent_dim, self.extreme_dim
                 ).to(self.device)
-                self.G.load_state_dict(torch.load(ckpt_path, map_location=self.device, weights_only=True))
+                self.G.load_state_dict(
+                    torch.load(ckpt_path, map_location=self.device, weights_only=True)
+                )
                 # Also need to compute ref_stats even when loading checkpoint
                 Xtr = self.X_train_ref.to(self.device)
                 mu, std = _standardize_fit(Xtr)
@@ -634,12 +675,19 @@ class MySATrainer:
         Xtr = self.X_train_ref.to(self.device)
         mu, std = _standardize_fit(Xtr)
         self.G, self.ref_stats = train_adv_generator(
-            self.model, Xtr, mu, std,
-            epochs=self.gen_epochs, batch_size=self.gen_batch,
-            latent_dim=self.latent_dim, extreme_dim=self.extreme_dim,
-            lr=self.gen_lr, alpha_dist=self.gen_alpha_dist,
+            self.model,
+            Xtr,
+            mu,
+            std,
+            epochs=self.gen_epochs,
+            batch_size=self.gen_batch,
+            latent_dim=self.latent_dim,
+            extreme_dim=self.extreme_dim,
+            lr=self.gen_lr,
+            alpha_dist=self.gen_alpha_dist,
             device=self.device,
-            modality_mask=self.modality_mask_ref
+            modality_mask=self.modality_mask_ref,
+            checkpoint_path=ckpt_path,
         )
 
     def step(self, X, y, m, modality_mask=None) -> Tuple[float, float, float]:
@@ -658,12 +706,14 @@ class MySATrainer:
         X = X.to(self.device, non_blocking=True)
         y = y.to(self.device, non_blocking=True)
         m = m.to(self.device, non_blocking=True)
-        mask_t = modality_mask.to(self.device, non_blocking=True) if modality_mask is not None else None
+        mask_t = (
+            modality_mask.to(self.device, non_blocking=True) if modality_mask is not None else None
+        )
 
         self.model.train()
 
         # Forward pass
-        if mask_t is not None and hasattr(self.model, 'forward'):
+        if mask_t is not None and hasattr(self.model, "forward"):
             try:
                 hazards = self.model(X, modality_mask=mask_t)
             except:
@@ -709,6 +759,7 @@ class MySATrainer:
                     extreme_dim=self.extreme_dim,
                     t_sample=self.ig_time_subsample,
                     forward_kwargs=forward_kwargs,
+                    create_graph=True,  # priors must back-propagate to the model
                 )
 
                 if self.lambda_smooth > 0:
@@ -781,7 +832,7 @@ def cindex_fast_torch(durations, events, risks) -> torch.Tensor:
     # Create pairwise comparison matrices
     dur_i = durations.unsqueeze(1)  # [n, 1]
     dur_j = durations.unsqueeze(0)  # [1, n]
-    evt_i = events.unsqueeze(1)     # [n, 1]
+    evt_i = events.unsqueeze(1)  # [n, 1]
 
     # Valid pairs: i observed and t_i < t_j
     valid = (evt_i == 1) & (dur_i < dur_j)
@@ -810,7 +861,8 @@ def cindex_fast_torch(durations, events, risks) -> torch.Tensor:
 
 # ---------------------- Data Processing Utilities ----------------------
 
-def make_intervals(df, duration_col='duration', event_col='event', n_bins=30, method='quantile'):
+
+def make_intervals(df, duration_col="duration", event_col="event", n_bins=30, method="quantile"):
     """
     Discretize survival times into intervals.
 
@@ -845,7 +897,7 @@ def make_intervals(df, duration_col='duration', event_col='event', n_bins=30, me
         # Fall back to all durations if no events
         observed_durations = durations
 
-    if method == 'quantile':
+    if method == "quantile":
         # Use quantiles of observed events
         quantiles = np.linspace(0, 1, n_bins + 1)
         bins = np.unique(np.percentile(observed_durations, quantiles * 100))
@@ -862,7 +914,7 @@ def make_intervals(df, duration_col='duration', event_col='event', n_bins=30, me
     intervals = np.digitize(durations, bins[1:])
     intervals = np.clip(intervals, 0, n_bins - 1)
 
-    df['interval_number'] = intervals
+    df["interval_number"] = intervals
     return df
 
 
@@ -893,7 +945,7 @@ def build_supervision(intervals, events, num_bins):
     for i in range(n_samples):
         t_idx = intervals[i]
         # Mask all time bins up to and including the event/censoring time
-        masks[i, :t_idx+1] = 1
+        masks[i, : t_idx + 1] = 1
         # If event occurred, set hazard to 1 at that time
         if events[i] == 1:
             labels[i, t_idx] = 1

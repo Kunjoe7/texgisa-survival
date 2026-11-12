@@ -13,6 +13,6 @@ from .base import BaseSurvivalModel
 from .texgisa import TEXGISAModel
 
 __all__ = [
-    'BaseSurvivalModel',
-    'TEXGISAModel',
+    "BaseSurvivalModel",
+    "TEXGISAModel",
 ]

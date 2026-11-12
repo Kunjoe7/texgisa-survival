@@ -17,7 +17,8 @@ from sklearn.model_selection import train_test_split
 
 # Import the advanced functions
 import sys
-sys.path.append('../src')
+
+sys.path.append("../src")
 
 from texgisa_survival.models.texgisa import MultiTaskSurvivalNet
 from texgisa_survival.models.texgisa_advanced import (
@@ -54,7 +55,7 @@ def generate_survival_data(n_samples=1000, n_features=20, random_state=42):
         n_informative=10,
         n_redundant=5,
         n_classes=2,
-        random_state=random_state
+        random_state=random_state,
     )
 
     # Generate survival times using Cox model simulation
@@ -70,7 +71,7 @@ def generate_survival_data(n_samples=1000, n_features=20, random_state=42):
 
     # Generate survival times
     U = np.random.uniform(0, 1, n_samples)
-    T = (-np.log(U) / (lambda_0 * np.exp(eta))) ** (1/rho)
+    T = (-np.log(U) / (lambda_0 * np.exp(eta))) ** (1 / rho)
 
     # Add censoring
     C = np.random.exponential(scale=np.median(T) * 1.5, size=n_samples)
@@ -78,10 +79,10 @@ def generate_survival_data(n_samples=1000, n_features=20, random_state=42):
     event = (T <= C).astype(int)
 
     # Create DataFrame
-    feature_cols = [f'feature_{i}' for i in range(n_features)]
+    feature_cols = [f"feature_{i}" for i in range(n_features)]
     df = pd.DataFrame(X, columns=feature_cols)
-    df['duration'] = time
-    df['event'] = event
+    df["duration"] = time
+    df["event"] = event
 
     return df, feature_cols
 
@@ -99,16 +100,17 @@ def run_advanced_texgisa_example():
 
     # 2. Prepare data with advanced functions
     print("2. Preparing data with advanced discretization...")
-    df = make_intervals(df, duration_col='duration', event_col='event',
-                       n_bins=30, method='quantile')
-    num_bins = int(df['interval_number'].max()) + 1
+    df = make_intervals(
+        df, duration_col="duration", event_col="event", n_bins=30, method="quantile"
+    )
+    num_bins = int(df["interval_number"].max()) + 1
     print(f"   Created {num_bins} time bins\n")
 
     # Split data
     X = df[feature_cols].values.astype(np.float32)
-    durations = df['duration'].values
-    events = df['event'].values
-    intervals = df['interval_number'].values
+    durations = df["duration"].values
+    events = df["event"].values
+    intervals = df["interval_number"].values
 
     X_train, X_val, dur_train, dur_val, evt_train, evt_val, int_train, int_val = train_test_split(
         X, durations, events, intervals, test_size=0.2, random_state=42
@@ -124,11 +126,11 @@ def run_advanced_texgisa_example():
     # 3. Define expert rules for important features
     print("3. Setting up expert rules...")
     expert_rules = {
-        'important_features': ['feature_0', 'feature_1', 'feature_2'],  # Known important features
-        'rules': [
-            {'feature': 'feature_0', 'relation': '>=mean', 'weight': 2.0},
-            {'feature': 'feature_1', 'relation': '>=mean', 'weight': 1.5},
-        ]
+        "important_features": ["feature_0", "feature_1", "feature_2"],  # Known important features
+        "rules": [
+            {"feature": "feature_0", "relation": ">=mean", "weight": 2.0},
+            {"feature": "feature_1", "relation": ">=mean", "weight": 1.5},
+        ],
     }
     feat2idx = {name: i for i, name in enumerate(feature_cols)}
     important_idx = _resolve_important_feature_indices(expert_rules, feat2idx)
@@ -142,10 +144,10 @@ def run_advanced_texgisa_example():
         hidden_layers=[128, 64, 32],
         num_time_bins=num_bins,
         dropout=0.1,
-        activation='relu'
+        activation="relu",
     )
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"   Using device: {device}\n")
 
     # 5. Initialize advanced trainer
@@ -155,19 +157,19 @@ def run_advanced_texgisa_example():
         lr=1e-3,
         device=device,
         lambda_smooth=0.01,  # Temporal smoothness on attributions
-        lambda_expert=0.1,    # Expert penalty weight
+        lambda_expert=0.1,  # Expert penalty weight
         expert_rules=expert_rules,
         feat2idx=feat2idx,
-        ig_steps=20,         # Integration steps for TEXGI
-        latent_dim=16,       # Latent dimension for generator
-        extreme_dim=1,       # Extreme code dimension
+        ig_steps=20,  # Integration steps for TEXGI
+        latent_dim=16,  # Latent dimension for generator
+        extreme_dim=1,  # Extreme code dimension
         ig_batch_samples=32,  # Subsample for efficiency
-        ig_time_subsample=10, # Subsample time bins
-        gen_epochs=100,      # Generator training epochs
+        ig_time_subsample=10,  # Subsample time bins
+        gen_epochs=100,  # Generator training epochs
         gen_batch=128,
         gen_lr=1e-3,
         gen_alpha_dist=1.0,
-        X_train_ref=torch.tensor(X_train, dtype=torch.float32)
+        X_train_ref=torch.tensor(X_train, dtype=torch.float32),
     )
     print("   Trainer configured with:")
     print(f"   - Lambda smooth: {trainer.lambda_smooth}")
@@ -197,11 +199,11 @@ def run_advanced_texgisa_example():
         n_samples = len(X_train_t)
         indices = torch.randperm(n_samples)
 
-        epoch_losses = {'main': 0, 'smooth': 0, 'expert': 0}
+        epoch_losses = {"main": 0, "smooth": 0, "expert": 0}
         n_batches = 0
 
         for i in range(0, n_samples, batch_size):
-            batch_idx = indices[i:i+batch_size]
+            batch_idx = indices[i : i + batch_size]
 
             # Get batch
             X_batch = X_train_t[batch_idx]
@@ -209,13 +211,11 @@ def run_advanced_texgisa_example():
             m_batch = m_train_t[batch_idx]
 
             # Training step
-            loss_main, loss_smooth, loss_expert = trainer.step(
-                X_batch, y_batch, m_batch
-            )
+            loss_main, loss_smooth, loss_expert = trainer.step(X_batch, y_batch, m_batch)
 
-            epoch_losses['main'] += loss_main
-            epoch_losses['smooth'] += loss_smooth
-            epoch_losses['expert'] += loss_expert
+            epoch_losses["main"] += loss_main
+            epoch_losses["smooth"] += loss_smooth
+            epoch_losses["expert"] += loss_expert
             n_batches += 1
 
         # Average losses
@@ -224,17 +224,18 @@ def run_advanced_texgisa_example():
 
         # Evaluate
         cindex = trainer.evaluate_cindex(
-            X_val_t, y_val_t, m_val_t,
-            torch.tensor(dur_val), torch.tensor(evt_val)
+            X_val_t, y_val_t, m_val_t, torch.tensor(dur_val), torch.tensor(evt_val)
         )
 
         if cindex > best_cindex:
             best_cindex = cindex
 
         if epoch % 10 == 0:
-            print(f"   Epoch {epoch:3d} | Loss: {epoch_losses['main']:.4f} | "
-                  f"Smooth: {epoch_losses['smooth']:.4f} | Expert: {epoch_losses['expert']:.4f} | "
-                  f"C-index: {cindex:.4f}")
+            print(
+                f"   Epoch {epoch:3d} | Loss: {epoch_losses['main']:.4f} | "
+                f"Smooth: {epoch_losses['smooth']:.4f} | Expert: {epoch_losses['expert']:.4f} | "
+                f"C-index: {cindex:.4f}"
+            )
 
     print(f"\n   Best validation C-index: {best_cindex:.4f}\n")
 
@@ -256,7 +257,7 @@ def run_advanced_texgisa_example():
             M=20,
             latent_dim=trainer.latent_dim,
             extreme_dim=trainer.extreme_dim,
-            t_sample=5  # Sample 5 time points for efficiency
+            t_sample=5,  # Sample 5 time points for efficiency
         )
 
         print(f"   Attribution shape: {phi.shape} [T, B, D]")
@@ -283,11 +284,7 @@ def run_advanced_texgisa_example():
     # 8. Demonstrate GPD sampling
     print("8. Demonstrating Generalized Pareto Distribution sampling...")
     extreme_codes = sample_extreme_code(
-        batch_size=10,
-        extreme_dim=1,
-        device=device,
-        xi=0.3,
-        beta=1.0
+        batch_size=10, extreme_dim=1, device=device, xi=0.3, beta=1.0
     )
     print(f"   Extreme code samples (first 5): {extreme_codes[:5].squeeze().cpu().numpy()}")
     print(f"   Mean: {extreme_codes.mean().item():.4f}")
@@ -297,17 +294,13 @@ def run_advanced_texgisa_example():
     print("9. Multimodal fusion model structure (demonstration)...")
 
     multimodal_config = {
-        'tabular': {'input_dim': 20},
-        'image': {'backbone': 'resnet18', 'pretrained': False},
-        'sensor': {'input_channels': 3, 'backbone': 'cnn'}
+        "tabular": {"input_dim": 20},
+        "image": {"backbone": "resnet18", "pretrained": False},
+        "sensor": {"input_channels": 3, "backbone": "cnn"},
     }
 
     multimodal_model = MultiModalFusionModel(
-        modality_configs=multimodal_config,
-        num_bins=num_bins,
-        hidden=256,
-        depth=2,
-        dropout=0.2
+        modality_configs=multimodal_config, num_bins=num_bins, hidden=256, depth=2, dropout=0.2
     )
 
     total_params = sum(p.numel() for p in multimodal_model.parameters())

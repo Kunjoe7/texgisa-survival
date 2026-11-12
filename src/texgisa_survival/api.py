@@ -27,22 +27,45 @@ class TexGISa:
     predictions through time-dependent feature importance and supports
     integration of expert domain knowledge.
 
+    The network predicts one hazard per time interval; a Cox risk head on the
+    shared representation gives the risk score and shifts every interval's
+    hazard (proportional-hazards coupling). The hazards are trained with the
+    piecewise-constant-hazard likelihood and calibrated on validation data
+    after training. Defaults are the values most often selected by nested
+    cross-validation in the package benchmark (``benchmarks/``).
+
     Parameters
     ----------
-    hidden_layers : list of int, default [128, 64, 32]
-        Hidden layer dimensions for the neural network
+    hidden_layers : list of int, default [256, 128]
+        'mlp': hidden layer widths. 'resnet': width hidden_layers[0] and
+        len(hidden_layers) residual blocks
     num_time_bins : int, default 20
         Number of discrete time intervals for hazard prediction
-    dropout : float, default 0.1
+    dropout : float, default 0.2
         Dropout probability for regularization
-    activation : str, default 'relu'
-        Activation function ('relu', 'tanh', 'sigmoid')
+    activation : str, default 'selu'
+        Activation function ('relu', 'elu', 'selu', 'gelu', 'tanh', ...)
     lambda_smooth : float, default 0.0
         Weight for temporal smoothness regularization
     lambda_expert : float, default 0.0
         Weight for expert knowledge constraints
     ig_steps : int, default 50
         Number of integration steps for TEXGI importance calculation
+    time_binning : {'quantile', 'uniform'}, default 'quantile'
+        Edges at quantiles of the event times, or equal-width intervals
+    risk_score : {'expected_time', 'hazard_sum'}, default 'expected_time'
+        Risk score when lambda_cox=0 (no Cox head): minus the restricted mean
+        survival time, or the sum of interval hazards
+    weight_decay : float, default 0.01
+        Decoupled weight decay (AdamW)
+    architecture : {'resnet', 'mlp'}, default 'resnet'
+        Residual MLP or plain MLP backbone
+    **kwargs
+        Further model options of
+        :class:`~texgisa_survival.models.TEXGISAModel`: ``norm`` ('layer'),
+        ``lambda_cox`` (1.0), ``likelihood`` ('pch'), ``calibrate`` (True),
+        ``ema_decay`` (0.9), ``input_noise`` (0.1), ``input_gate`` (False),
+        ``es_metric`` ('loss').
     random_state : int, optional
         Random seed for reproducibility
     device : str, optional
@@ -56,7 +79,7 @@ class TexGISa:
     >>>
     >>> # Basic usage
     >>> model = TexGISa(random_state=42)
-    >>> model.fit(X_train, time_train, event_train, epochs=100)
+    >>> model.fit(X_train, time_train, event_train)  # holds out 20% for validation
     >>> predictions = model.predict_survival(X_test, times=[12, 24, 36])
     >>>
     >>> # With expert knowledge
@@ -67,18 +90,24 @@ class TexGISa:
     >>> importance = model.get_feature_importance(method='texgi')
     """
 
-    def __init__(self,
-                 hidden_layers: Optional[List[int]] = None,
-                 num_time_bins: int = 20,
-                 dropout: float = 0.1,
-                 activation: str = 'relu',
-                 lambda_smooth: float = 0.0,
-                 lambda_expert: float = 0.0,
-                 ig_steps: int = 50,
-                 random_state: Optional[int] = None,
-                 device: Optional[str] = None,
-                 verbose: int = 1,
-                 **kwargs):
+    def __init__(
+        self,
+        hidden_layers: Optional[List[int]] = None,
+        num_time_bins: int = 20,
+        dropout: float = 0.2,
+        activation: str = "selu",
+        lambda_smooth: float = 0.0,
+        lambda_expert: float = 0.0,
+        ig_steps: int = 50,
+        time_binning: str = "quantile",
+        risk_score: str = "expected_time",
+        weight_decay: float = 0.01,
+        architecture: str = "resnet",
+        random_state: Optional[int] = None,
+        device: Optional[str] = None,
+        verbose: int = 1,
+        **kwargs,
+    ):
         """Initialize TexGISa model."""
 
         self.random_state = random_state
@@ -90,11 +119,11 @@ class TexGISa:
         # Set device
         if device is None:
             if torch.cuda.is_available():
-                self.device = 'cuda'
+                self.device = "cuda"
             elif torch.backends.mps.is_available():
-                self.device = 'mps'
+                self.device = "mps"
             else:
-                self.device = 'cpu'
+                self.device = "cpu"
         else:
             self.device = device
 
@@ -110,22 +139,28 @@ class TexGISa:
             lambda_smooth=lambda_smooth,
             lambda_expert=lambda_expert,
             ig_steps=ig_steps,
+            time_binning=time_binning,
+            risk_score=risk_score,
+            weight_decay=weight_decay,
+            architecture=architecture,
             device=self.device,
             random_state=random_state,
-            **kwargs
+            **kwargs,
         )
 
-    def fit(self,
-            X: Union[pd.DataFrame, np.ndarray],
-            time: Union[pd.Series, np.ndarray],
-            event: Union[pd.Series, np.ndarray],
-            validation_data: Optional[Tuple] = None,
-            epochs: int = 100,
-            batch_size: int = 32,
-            learning_rate: float = 0.001,
-            early_stopping: bool = True,
-            patience: int = 10,
-            **kwargs) -> 'TexGISa':
+    def fit(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        time: Union[pd.Series, np.ndarray],
+        event: Union[pd.Series, np.ndarray],
+        validation_data: Optional[Tuple] = None,
+        epochs: int = 300,
+        batch_size: int = 512,
+        learning_rate: float = 0.003,
+        early_stopping: bool = True,
+        patience: int = 15,
+        **kwargs,
+    ) -> "TexGISa":
         """
         Train the TexGISa model.
 
@@ -138,19 +173,21 @@ class TexGISa:
         event : array-like of shape (n_samples,)
             Event indicator (1=event, 0=censored)
         validation_data : tuple, optional
-            (X_val, time_val, event_val) for validation
-        epochs : int, default 100
-            Number of training epochs
-        batch_size : int, default 32
+            (X_val, time_val, event_val) for early stopping, checkpointing and
+            calibration. If None, ``validation_split`` (default 0.2) of the
+            training data is held out at random.
+        epochs : int, default 300
+            Maximum number of training epochs
+        batch_size : int, default 512
             Batch size for training
-        learning_rate : float, default 0.001
+        learning_rate : float, default 0.003
             Learning rate
         early_stopping : bool, default True
             Whether to use early stopping
-        patience : int, default 10
+        patience : int, default 15
             Patience for early stopping
         **kwargs : dict
-            Additional training parameters
+            Additional training parameters (e.g. ``validation_split``)
 
         Returns
         -------
@@ -174,17 +211,20 @@ class TexGISa:
 
         # Pass expert rules to model if any
         if self.expert_rules:
-            kwargs['expert_rules'] = {'rules': self.expert_rules}
+            kwargs["expert_rules"] = {"rules": self.expert_rules}
 
         # Handle verbose parameter - allow override from kwargs
-        verbose = kwargs.pop('verbose', self.verbose)
+        verbose = kwargs.pop("verbose", self.verbose)
 
         # Train the model
         if verbose:
             print(f"Training TexGISa model...")
 
         self.model.fit(
-            X, time, event,
+            X,
+            time,
+            event,
+            feature_names=self.feature_names,
             validation_data=validation_data,
             epochs=epochs,
             batch_size=batch_size,
@@ -192,7 +232,7 @@ class TexGISa:
             early_stopping=early_stopping,
             patience=patience,
             verbose=verbose,
-            **kwargs
+            **kwargs,
         )
 
         self.is_fitted = True
@@ -202,9 +242,11 @@ class TexGISa:
 
         return self
 
-    def predict_survival(self,
-                        X: Union[pd.DataFrame, np.ndarray],
-                        times: Optional[Union[List[float], np.ndarray]] = None) -> np.ndarray:
+    def predict_survival(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        times: Optional[Union[List[float], np.ndarray]] = None,
+    ) -> np.ndarray:
         """
         Predict survival probabilities at specified times.
 
@@ -227,8 +269,7 @@ class TexGISa:
 
         return self.model.predict_survival(X, times)
 
-    def predict_risk(self,
-                    X: Union[pd.DataFrame, np.ndarray]) -> np.ndarray:
+    def predict_risk(self, X: Union[pd.DataFrame, np.ndarray]) -> np.ndarray:
         """
         Predict risk scores (higher = higher risk of event).
 
@@ -249,13 +290,16 @@ class TexGISa:
 
         return self.model.predict_risk(X)
 
-    def add_expert_rule(self,
-                       feature: Union[str, int],
-                       relation: str,
-                       threshold: Union[str, float],
-                       sign: str = '+1',
-                       weight: float = 1.0,
-                       min_magnitude: float = 0.01) -> None:
+    def add_expert_rule(
+        self,
+        feature: Union[str, int],
+        relation: str,
+        threshold: Union[str, float],
+        sign: str = "+1",
+        weight: float = 1.0,
+        min_magnitude: float = 0.01,
+        direction_mode: str = "path_gradient",
+    ) -> None:
         """
         Add expert knowledge rule for feature importance constraints.
 
@@ -277,7 +321,10 @@ class TexGISa:
         weight : float, default 1.0
             Importance weight of this rule (higher = stronger constraint)
         min_magnitude : float, default 0.01
-            Minimum magnitude for the effect
+            Minimum path-averaged hazard derivative per standardized feature unit.
+        direction_mode : {'path_gradient', 'attribution'}, default 'path_gradient'
+            Constrain feature direction along the integration path, or reproduce
+            the legacy sign of baseline-relative attributions.
 
         Examples
         --------
@@ -285,29 +332,37 @@ class TexGISa:
         >>> model.add_expert_rule('treatment_A', '==', 1, sign='-1', weight=2.0)
         >>> model.add_expert_rule('biomarker', '>', 0.5, sign='+1')
         """
+        if relation not in {">", ">=", "<", "<=", "=="}:
+            raise ValueError("Unknown rule relation")
+        if direction_mode not in {"path_gradient", "attribution"}:
+            raise ValueError("direction_mode must be path_gradient or attribution")
+        if str(sign) not in {"+1", "1", "-1"}:
+            raise ValueError("sign must be +1 or -1")
+        if weight < 0 or min_magnitude < 0:
+            raise ValueError("weight and min_magnitude must be non-negative")
         # Convert sign to integer
         if isinstance(sign, str):
-            sign_int = 1 if sign == '+1' else -1
+            sign_int = 1 if sign in ("+1", "1") else -1
         else:
             sign_int = 1 if sign > 0 else -1
 
         rule = {
-            'feature': feature,
-            'relation': relation,
-            'threshold': threshold,
-            'sign': sign_int,
-            'weight': weight,
-            'min_magnitude': min_magnitude
+            "feature": feature,
+            "relation": relation,
+            "threshold": threshold,
+            "sign": sign_int,
+            "weight": weight,
+            "min_magnitude": min_magnitude,
+            "direction_mode": direction_mode,
         }
         self.expert_rules.append(rule)
 
         if self.verbose:
             print(f"Added expert rule: {feature} {relation} {threshold} -> {sign}")
 
-    def get_feature_importance(self,
-                             method: str = 'texgi',
-                             n_steps: Optional[int] = None,
-                             **kwargs) -> pd.DataFrame:
+    def get_feature_importance(
+        self, method: str = "texgi", n_steps: Optional[int] = None, **kwargs
+    ) -> pd.DataFrame:
         """
         Get feature importance scores.
 
@@ -329,25 +384,76 @@ class TexGISa:
         self._check_is_fitted()
 
         importance_dict = self.model.get_feature_importance(
-            method=method,
-            n_steps=n_steps,
-            **kwargs
+            method=method, n_steps=n_steps, **kwargs
         )
 
         # Convert to DataFrame
-        df = pd.DataFrame({
-            'feature': self.feature_names,
-            'importance': importance_dict['importance'],
-            'std': importance_dict.get('std', np.zeros(len(self.feature_names)))
-        })
+        df = pd.DataFrame(
+            {
+                "feature": self.feature_names,
+                "importance": importance_dict["importance"],
+                "std": importance_dict.get("std", np.zeros(len(self.feature_names))),
+            }
+        )
 
-        return df.sort_values('importance', ascending=False).reset_index(drop=True)
+        return df.sort_values("importance", ascending=False).reset_index(drop=True)
 
-    def evaluate(self,
-                X: Union[pd.DataFrame, np.ndarray],
-                time: Union[pd.Series, np.ndarray],
-                event: Union[pd.Series, np.ndarray],
-                metrics: Optional[List[str]] = None) -> Dict[str, float]:
+    def explain(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        n_steps: Optional[int] = None,
+        time_bins: Optional[int] = None,
+        baseline_quantile: float = 0.98,
+    ) -> np.ndarray:
+        """
+        Time-resolved TEXGI attributions for individual samples.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Samples to explain
+        n_steps : int, optional
+            Integration steps; defaults to the model's ``ig_steps``
+        time_bins : int, optional
+            Number of time bins to subsample (evenly spaced); all bins if None
+        baseline_quantile : float, default 0.98
+            Upper-tail quantile of the training data used as the extreme baseline
+
+        Returns
+        -------
+        phi : np.ndarray of shape (n_bins, n_samples, n_features)
+            Attribution of each feature to the hazard of each sample in each bin
+        """
+        from .texgi_utils import texgi_time_series
+
+        self._check_is_fitted()
+        if isinstance(X, pd.DataFrame):
+            X = X.values
+        inner = self.model
+        X_std = torch.FloatTensor(inner.scaler.transform(np.asarray(X, dtype=np.float32))).to(
+            self.device
+        )
+        ref = inner.training_data_sample
+        if baseline_quantile == 0.98:
+            baseline = inner._reference_baseline(X_std)
+        else:
+            baseline = torch.quantile(ref, baseline_quantile, dim=0, keepdim=True).repeat(
+                X_std.shape[0], 1
+            )
+
+        inner.model.eval()
+        phi = texgi_time_series(
+            inner.model, X_std, X_baseline=baseline, M=n_steps or inner.ig_steps, t_sample=time_bins
+        )
+        return phi.detach().cpu().numpy()
+
+    def evaluate(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        time: Union[pd.Series, np.ndarray],
+        event: Union[pd.Series, np.ndarray],
+        metrics: Optional[List[str]] = None,
+    ) -> Dict[str, float]:
         """
         Evaluate model performance on test data.
 
@@ -371,7 +477,7 @@ class TexGISa:
         self._check_is_fitted()
 
         if metrics is None:
-            metrics = ['c-index', 'brier_score']
+            metrics = ["c-index", "brier_score"]
 
         if isinstance(X, pd.DataFrame):
             X = X.values
@@ -382,32 +488,39 @@ class TexGISa:
 
         scores = {}
 
-        if 'c-index' in metrics:
+        if "c-index" in metrics:
             from .metrics import concordance_index
-            risk_scores = self.predict_risk(X)
-            scores['c-index'] = concordance_index(time, event, risk_scores)
 
-        if 'brier_score' in metrics:
+            risk_scores = self.predict_risk(X)
+            scores["c-index"] = concordance_index(time, risk_scores, event)
+
+        if "brier_score" in metrics:
             from .metrics import brier_score
+
             times = np.percentile(time[event == 1], [25, 50, 75])
             survival_probs = self.predict_survival(X, times)
-            scores['brier_score'] = brier_score(time, event, survival_probs, times).mean()
+            scores["brier_score"] = float(
+                np.mean(brier_score(time, survival_probs, event, eval_times=times))
+            )
 
-        if 'ibs' in metrics:
+        if "ibs" in metrics:
             from .metrics import integrated_brier_score
+
             times = np.linspace(time[event == 1].min(), time[event == 1].max(), 20)
             survival_probs = self.predict_survival(X, times)
-            scores['ibs'] = integrated_brier_score(time, event, survival_probs, times)
+            scores["ibs"] = integrated_brier_score(time, survival_probs, event, eval_times=times)
 
         return scores
 
-    def plot_survival_curves(self,
-                           X: Union[pd.DataFrame, np.ndarray],
-                           times: Optional[np.ndarray] = None,
-                           sample_indices: Optional[List[int]] = None,
-                           labels: Optional[List[str]] = None,
-                           title: str = "TexGISa Predicted Survival Curves",
-                           save_path: Optional[str] = None) -> None:
+    def plot_survival_curves(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        times: Optional[np.ndarray] = None,
+        sample_indices: Optional[List[int]] = None,
+        labels: Optional[List[str]] = None,
+        title: str = "TexGISa Predicted Survival Curves",
+        save_path: Optional[str] = None,
+    ) -> None:
         """
         Plot survival curves for selected samples.
 
@@ -441,7 +554,7 @@ class TexGISa:
             sample_indices=sample_indices,
             labels=labels,
             title=title,
-            save_path=save_path
+            save_path=save_path,
         )
 
     def save(self, filepath: str) -> None:
@@ -461,11 +574,11 @@ class TexGISa:
 
         # Get model state
         save_dict = {
-            'model_state': self.model.get_state(),
-            'feature_names': self.feature_names,
-            'expert_rules': self.expert_rules,
-            'device': self.device,
-            'version': '1.0.0'
+            "model_state": self.model.get_state(),
+            "feature_names": self.feature_names,
+            "expert_rules": self.expert_rules,
+            "device": self.device,
+            "version": __import__("texgisa_survival").__version__,
         }
 
         joblib.dump(save_dict, filepath)
@@ -489,11 +602,11 @@ class TexGISa:
         save_dict = joblib.load(filepath)
 
         # Restore model state
-        self.feature_names = save_dict['feature_names']
-        self.expert_rules = save_dict['expert_rules']
-        self.device = save_dict.get('device', 'cpu')
+        self.feature_names = save_dict["feature_names"]
+        self.expert_rules = save_dict["expert_rules"]
+        self.device = save_dict.get("device", "cpu")
 
-        self.model.set_state(save_dict['model_state'])
+        self.model.set_state(save_dict["model_state"])
         self.is_fitted = True
 
         if self.verbose:

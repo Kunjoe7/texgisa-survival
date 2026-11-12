@@ -51,7 +51,7 @@ def e2e_data():
 
 class TestVersion:
     def test_version_is_2(self):
-        assert __version__ == "2.0.0"
+        assert __version__.startswith("2.")
 
 
 class TestDataManagerE2E:
@@ -191,9 +191,7 @@ class TestFullPipelineE2E:
 
         # 3. Counterfactual (scaling) from synthetic hazards
         hazards = np.random.RandomState(99).rand(5, 8).astype("float32")
-        cf_result = generate_cf_from_arrays(
-            hazards, desired_extension=1.0, patient_indices=[0, 1]
-        )
+        cf_result = generate_cf_from_arrays(hazards, desired_extension=1.0, patient_indices=[0, 1])
         assert isinstance(cf_result, CFResult)
         assert not cf_result.table.empty
 

@@ -233,3 +233,9 @@ test-output/
 # Coverage
 .coverage
 htmlcov/
+
+# local tooling
+.pytest_cache/
+htmlcov/
+coverage.xml
+.coverage

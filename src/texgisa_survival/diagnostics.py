@@ -16,14 +16,15 @@ import pandas as pd
 from typing import Optional, Tuple, List, Dict, Any
 
 
-def brier_score_discrete(hazards: np.ndarray,
-                        intervals: np.ndarray,
-                        events: np.ndarray) -> np.ndarray:
+def brier_score_discrete(
+    hazards: np.ndarray, intervals: np.ndarray, events: np.ndarray
+) -> np.ndarray:
     """
     Calculate approximate Brier score per time bin for discrete-time hazards.
 
     Uses target y_k = 1 if event occurred by k, else 0; predict p_k = 1 - S_k
-    where S_k = prod_{j<=k} (1 - h_j).
+    where S_k = prod_{j<=k} (1 - h_j). A subject censored in bin c has unknown
+    status from bin c on and is excluded from those bins (no IPCW reweighting).
 
     Parameters
     ----------
@@ -53,6 +54,8 @@ def brier_score_discrete(hazards: np.ndarray,
         if k <= 0:
             continue
         for j in range(T):
+            if e == 0 and (j + 1) >= k:
+                break  # censored: status unknown from bin k on
             y = 1 if (e == 1 and (j + 1) >= k) else 0
             bs[j] += (P[i, j] - y) ** 2
             cnt[j] += 1
@@ -61,11 +64,9 @@ def brier_score_discrete(hazards: np.ndarray,
     return bs
 
 
-def calibration_by_quantile(hazards: np.ndarray,
-                           intervals: np.ndarray,
-                           events: np.ndarray,
-                           k_idx: int,
-                           n_bins: int = 10) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def calibration_by_quantile(
+    hazards: np.ndarray, intervals: np.ndarray, events: np.ndarray, k_idx: int, n_bins: int = 10
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Calculate decile calibration for cumulative event probability by a specific time bin.
 
@@ -95,7 +96,9 @@ def calibration_by_quantile(hazards: np.ndarray,
     S = np.cumprod(one_minus_h, axis=1)
     Pk = 1.0 - S[:, k_idx]
 
-    order = np.argsort(Pk)
+    # Subjects censored by bin k have unknown status at k; leave them out.
+    known = ~((events == 0) & ((intervals - 1) <= k_idx))
+    order = np.where(known)[0][np.argsort(Pk[known])]
     groups = np.array_split(order, n_bins)
 
     xs, ys, ns = [], [], []
@@ -131,9 +134,9 @@ def hazards_to_survival(hazards: np.ndarray) -> np.ndarray:
     return np.cumprod(1.0 - h, axis=1)
 
 
-def integrated_brier_score_discrete(hazards: np.ndarray,
-                                   labels: np.ndarray,
-                                   masks: np.ndarray) -> float:
+def integrated_brier_score_discrete(
+    hazards: np.ndarray, labels: np.ndarray, masks: np.ndarray
+) -> float:
     """
     Compute Integrated Brier Score over discrete time bins.
 
@@ -170,9 +173,7 @@ def integrated_brier_score_discrete(hazards: np.ndarray,
     return float((brier * masks).sum() / denom)
 
 
-def integrated_nll_discrete(hazards: np.ndarray,
-                           labels: np.ndarray,
-                           masks: np.ndarray) -> float:
+def integrated_nll_discrete(hazards: np.ndarray, labels: np.ndarray, masks: np.ndarray) -> float:
     """
     Compute Integrated Negative Log-Likelihood using discrete-time hazards.
 
@@ -200,11 +201,9 @@ def integrated_nll_discrete(hazards: np.ndarray,
     return float((nll * masks).sum() / denom)
 
 
-def compute_diagnostics(model,
-                       X: np.ndarray,
-                       time: np.ndarray,
-                       event: np.ndarray,
-                       n_bins: int = 30) -> Dict[str, Any]:
+def compute_diagnostics(
+    model, X: np.ndarray, time: np.ndarray, event: np.ndarray, n_bins: int = 30
+) -> Dict[str, Any]:
     """
     Compute comprehensive model diagnostics.
 
@@ -241,16 +240,22 @@ def compute_diagnostics(model,
     # C-index
     c_index = concordance_index(time, risk_scores, event)
 
-    # Discretize times
-    bins = np.linspace(time.min(), time.max(), n_bins + 1)
-    intervals = np.digitize(time, bins)
+    # Discretize times on the model's own grid: the survival matrix has one
+    # column per model bin, so the subjects' bins must use the same edges.
+    time = np.asarray(time)
+    event = np.asarray(event)
+    n_bins = survival_probs.shape[1]
+    edges = getattr(getattr(model, "model", None), "time_bins", None)
+    if edges is None or len(edges) != n_bins + 1:
+        edges = np.linspace(time.min(), time.max(), n_bins + 1)
+    intervals = np.digitize(time, np.asarray(edges)[1:]) + 1
     intervals = np.clip(intervals, 1, n_bins)
 
     # Convert survival to hazards for Brier calculation
     hazards = np.zeros_like(survival_probs)
     hazards[:, 0] = 1 - survival_probs[:, 0]
     for t in range(1, survival_probs.shape[1]):
-        safe_denom = np.maximum(survival_probs[:, t-1], 1e-10)
+        safe_denom = np.maximum(survival_probs[:, t - 1], 1e-10)
         hazards[:, t] = 1 - survival_probs[:, t] / safe_denom
 
     # Brier scores
@@ -263,26 +268,26 @@ def compute_diagnostics(model,
     )
 
     return {
-        'c_index': c_index,
-        'brier_scores': brier_scores,
-        'mean_brier': float(brier_scores.mean()),
-        'calibration': {
-            'bin_index': k_idx,
-            'pred_means': pred_means,
-            'obs_rates': obs_rates,
-            'group_sizes': group_sizes
+        "c_index": c_index,
+        "brier_scores": brier_scores,
+        "mean_brier": float(brier_scores.mean()),
+        "calibration": {
+            "bin_index": k_idx,
+            "pred_means": pred_means,
+            "obs_rates": obs_rates,
+            "group_sizes": group_sizes,
         },
-        'risk_scores': risk_scores,
-        'survival_curves': survival_probs,
-        'n_samples': len(X),
-        'n_features': X.shape[1],
-        'n_bins': n_bins
+        "risk_scores": risk_scores,
+        "survival_curves": survival_probs,
+        "n_samples": len(X),
+        "n_features": X.shape[1],
+        "n_bins": n_bins,
     }
 
 
-def plot_diagnostics(diagnostics: Dict[str, Any],
-                    save_dir: Optional[str] = None,
-                    show: bool = True) -> None:
+def plot_diagnostics(
+    diagnostics: Dict[str, Any], save_dir: Optional[str] = None, show: bool = True
+) -> None:
     """
     Plot model diagnostic visualizations.
 
@@ -306,66 +311,69 @@ def plot_diagnostics(diagnostics: Dict[str, Any],
     if save_dir:
         os.makedirs(save_dir, exist_ok=True)
 
-    n_bins = diagnostics['n_bins']
+    n_bins = diagnostics["n_bins"]
 
     # 1. Brier score over time
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(np.arange(1, n_bins + 1), diagnostics['brier_scores'])
-    ax.set_xlabel('Time bin')
-    ax.set_ylabel('Brier score')
-    ax.set_title('Brier Score over Time')
+    ax.plot(np.arange(1, n_bins + 1), diagnostics["brier_scores"])
+    ax.set_xlabel("Time bin")
+    ax.set_ylabel("Brier score")
+    ax.set_title("Brier Score over Time")
     plt.tight_layout()
     if save_dir:
-        plt.savefig(os.path.join(save_dir, 'brier_over_time.png'), dpi=150)
+        plt.savefig(os.path.join(save_dir, "brier_over_time.png"), dpi=150)
     if show:
         plt.show()
     plt.close()
 
     # 2. Risk distribution
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.hist(diagnostics['risk_scores'], bins=30, edgecolor='black', alpha=0.7)
-    ax.set_xlabel('Risk score')
-    ax.set_ylabel('Count')
-    ax.set_title('Risk Score Distribution')
+    ax.hist(diagnostics["risk_scores"], bins=30, edgecolor="black", alpha=0.7)
+    ax.set_xlabel("Risk score")
+    ax.set_ylabel("Count")
+    ax.set_title("Risk Score Distribution")
     plt.tight_layout()
     if save_dir:
-        plt.savefig(os.path.join(save_dir, 'risk_distribution.png'), dpi=150)
+        plt.savefig(os.path.join(save_dir, "risk_distribution.png"), dpi=150)
     if show:
         plt.show()
     plt.close()
 
     # 3. Sample survival curves
     fig, ax = plt.subplots(figsize=(8, 5))
-    n_samples = min(12, len(diagnostics['survival_curves']))
-    indices = np.random.choice(len(diagnostics['survival_curves']), n_samples, replace=False)
+    n_samples = min(12, len(diagnostics["survival_curves"]))
+    indices = np.random.choice(len(diagnostics["survival_curves"]), n_samples, replace=False)
     for i in indices:
-        ax.plot(np.arange(1, diagnostics['survival_curves'].shape[1] + 1),
-               diagnostics['survival_curves'][i], alpha=0.7)
-    ax.set_xlabel('Time bin')
-    ax.set_ylabel('Survival probability S(t)')
-    ax.set_title('Sample Survival Curves')
+        ax.plot(
+            np.arange(1, diagnostics["survival_curves"].shape[1] + 1),
+            diagnostics["survival_curves"][i],
+            alpha=0.7,
+        )
+    ax.set_xlabel("Time bin")
+    ax.set_ylabel("Survival probability S(t)")
+    ax.set_title("Sample Survival Curves")
     ax.set_ylim(0, 1)
     plt.tight_layout()
     if save_dir:
-        plt.savefig(os.path.join(save_dir, 'sample_survival_curves.png'), dpi=150)
+        plt.savefig(os.path.join(save_dir, "sample_survival_curves.png"), dpi=150)
     if show:
         plt.show()
     plt.close()
 
     # 4. Calibration plot
-    calib = diagnostics['calibration']
+    calib = diagnostics["calibration"]
     fig, ax = plt.subplots(figsize=(6, 6))
-    ax.scatter(calib['pred_means'], calib['obs_rates'], s=50)
-    ax.plot([0, 1], [0, 1], 'k--', alpha=0.5, label='Perfect calibration')
-    ax.set_xlabel('Predicted event probability')
-    ax.set_ylabel('Observed event rate')
+    ax.scatter(calib["pred_means"], calib["obs_rates"], s=50)
+    ax.plot([0, 1], [0, 1], "k--", alpha=0.5, label="Perfect calibration")
+    ax.set_xlabel("Predicted event probability")
+    ax.set_ylabel("Observed event rate")
     ax.set_title(f'Calibration at Time Bin {calib["bin_index"] + 1}')
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.legend()
     plt.tight_layout()
     if save_dir:
-        plt.savefig(os.path.join(save_dir, 'calibration_scatter.png'), dpi=150)
+        plt.savefig(os.path.join(save_dir, "calibration_scatter.png"), dpi=150)
     if show:
         plt.show()
     plt.close()

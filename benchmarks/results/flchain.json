@@ -1,0 +1,2135 @@
+{
+ "Cox|14142|0": {
+  "c": 0.7906735730682166,
+  "ibs": 0.0899804975400046,
+  "inner_best": 0.8048636402741534,
+  "config": {
+   "pen": 0.1,
+   "l1": 0.0
+  },
+  "sec": 62.446672201156616,
+  "n_configs": 50
+ },
+ "Cox|14142|1": {
+  "c": 0.7972122443036785,
+  "ibs": 0.09567392113205755,
+  "inner_best": 0.8190832136736301,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 127.36220717430115,
+  "n_configs": 50
+ },
+ "Cox|14142|2": {
+  "c": 0.7784482056756195,
+  "ibs": 0.09976363293860434,
+  "inner_best": 0.8227416576772018,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 160.81470942497253,
+  "n_configs": 50
+ },
+ "Cox|14142|3": {
+  "c": 0.8058708489914871,
+  "ibs": 0.09213356728657392,
+  "inner_best": 0.8040587323113545,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 196.01072907447815,
+  "n_configs": 50
+ },
+ "Cox|14142|4": {
+  "c": 0.8094120032657591,
+  "ibs": 0.0983012491517515,
+  "inner_best": 0.8034126284875184,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.25
+  },
+  "sec": 163.00627040863037,
+  "n_configs": 50
+ },
+ "Cox|16180|0": {
+  "c": 0.8064938522083845,
+  "ibs": 0.09621822301621495,
+  "inner_best": 0.8097484044111337,
+  "config": {
+   "pen": 0.005,
+   "l1": 0.5
+  },
+  "sec": 137.77555465698242,
+  "n_configs": 50
+ },
+ "Cox|16180|1": {
+  "c": 0.7730671763082623,
+  "ibs": 0.10275836838851271,
+  "inner_best": 0.8213437299534554,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 152.60726118087769,
+  "n_configs": 50
+ },
+ "Cox|16180|2": {
+  "c": 0.7968767177502694,
+  "ibs": 0.09416067311934424,
+  "inner_best": 0.8097912995946944,
+  "config": {
+   "pen": 0.0,
+   "l1": 0.0
+  },
+  "sec": 155.672349691391,
+  "n_configs": 50
+ },
+ "Cox|16180|3": {
+  "c": 0.8044824500583714,
+  "ibs": 0.09346858895858264,
+  "inner_best": 0.7977043988635302,
+  "config": {
+   "pen": 0.1,
+   "l1": 0.0
+  },
+  "sec": 165.24363112449646,
+  "n_configs": 50
+ },
+ "Cox|16180|4": {
+  "c": 0.7955820755466595,
+  "ibs": 0.09125416246585845,
+  "inner_best": 0.8088716940964547,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.25
+  },
+  "sec": 98.38349390029907,
+  "n_configs": 50
+ },
+ "Cox|27182|0": {
+  "c": 0.8014368157851516,
+  "ibs": 0.09716074094949895,
+  "inner_best": 0.801846966478681,
+  "config": {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  "sec": 222.6451632976532,
+  "n_configs": 50
+ },
+ "Cox|27182|1": {
+  "c": 0.7984541414964382,
+  "ibs": 0.09777688555968053,
+  "inner_best": 0.8087606616963714,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.25
+  },
+  "sec": 130.968932390213,
+  "n_configs": 50
+ },
+ "Cox|27182|2": {
+  "c": 0.7981762097476152,
+  "ibs": 0.09492111764525937,
+  "inner_best": 0.7947831189016736,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 157.70591378211975,
+  "n_configs": 50
+ },
+ "Cox|27182|3": {
+  "c": 0.776392010325562,
+  "ibs": 0.0994786406802434,
+  "inner_best": 0.8197432518471356,
+  "config": {
+   "pen": 0.03,
+   "l1": 0.5
+  },
+  "sec": 162.9418501853943,
+  "n_configs": 50
+ },
+ "Cox|27182|4": {
+  "c": 0.8027129762164315,
+  "ibs": 0.09298978447554226,
+  "inner_best": 0.7957185409047273,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 141.1252589225769,
+  "n_configs": 50
+ },
+ "Cox|31415|0": {
+  "c": 0.7991518981545084,
+  "ibs": 0.09849331308072112,
+  "inner_best": 0.8074059957487356,
+  "config": {
+   "pen": 0.005,
+   "l1": 0.5
+  },
+  "sec": 143.8271825313568,
+  "n_configs": 50
+ },
+ "Cox|31415|1": {
+  "c": 0.7926874745081283,
+  "ibs": 0.08977160306400288,
+  "inner_best": 0.8094708056004429,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 165.79893374443054,
+  "n_configs": 50
+ },
+ "Cox|31415|2": {
+  "c": 0.7991561727467015,
+  "ibs": 0.0908996926890844,
+  "inner_best": 0.806173887587822,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 169.99296951293945,
+  "n_configs": 50
+ },
+ "Cox|31415|3": {
+  "c": 0.8080912343105167,
+  "ibs": 0.09226165805868085,
+  "inner_best": 0.7979890310786106,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 188.30925059318542,
+  "n_configs": 50
+ },
+ "Cox|31415|4": {
+  "c": 0.7829876010355811,
+  "ibs": 0.10760875933633589,
+  "inner_best": 0.8166469263104112,
+  "config": {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  "sec": 233.83249807357788,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|27182|0": {
+  "c": 0.8014368157851516,
+  "ibs": 0.09716074094949895,
+  "inner_best": 0.801846966478681,
+  "config": {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  "sec": 192.1023931503296,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|27182|1": {
+  "c": 0.7984541414964382,
+  "ibs": 0.0977768855596815,
+  "inner_best": 0.8087606616963714,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.25
+  },
+  "sec": 176.06683993339539,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|27182|2": {
+  "c": 0.7981762097476152,
+  "ibs": 0.09492111764525935,
+  "inner_best": 0.7947831189016736,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 197.84553480148315,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|27182|3": {
+  "c": 0.776392010325562,
+  "ibs": 0.09947864068043757,
+  "inner_best": 0.8197432518471356,
+  "config": {
+   "pen": 0.03,
+   "l1": 0.5
+  },
+  "sec": 156.74451112747192,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|27182|4": {
+  "c": 0.8033803190733034,
+  "ibs": 0.0992174043657416,
+  "inner_best": 0.7956170295456062,
+  "config": {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  "sec": 169.33201122283936,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|31415|0": {
+  "c": 0.6548573522003939,
+  "ibs": 0.16028255079061926,
+  "inner_best": 0.8074059957487356,
+  "config": {
+   "pen": 0.005,
+   "l1": 0.5
+  },
+  "sec": 254.48250675201416,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|31415|1": {
+  "c": 0.7926874745081283,
+  "ibs": 0.0897716035092941,
+  "inner_best": 0.8094708056004429,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 211.79911732673645,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|31415|2": {
+  "c": 0.7991561727467015,
+  "ibs": 0.09089969022823018,
+  "inner_best": 0.806173887587822,
+  "config": {
+   "pen": 0.05,
+   "l1": 0.0
+  },
+  "sec": 209.126526594162,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|31415|3": {
+  "c": 0.8080912343105167,
+  "ibs": 0.09226165805868085,
+  "inner_best": 0.7979890310786106,
+  "config": {
+   "pen": 0.02,
+   "l1": 0.25
+  },
+  "sec": 217.481769323349,
+  "n_configs": 50
+ },
+ "Cox (library defaults)|31415|4": {
+  "c": 0.7829876010355811,
+  "ibs": 0.10760875933633589,
+  "inner_best": 0.8166469263104112,
+  "config": {
+   "pen": 0.2,
+   "l1": 0.25
+  },
+  "sec": 158.6902561187744,
+  "n_configs": 50
+ },
+ "CoxTime|14142|0": {
+  "c": 0.7920958302998476,
+  "ibs": 0.0906650203243769,
+  "inner_best": 0.8062200682515558,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 339.4609658718109,
+  "n_configs": 54
+ },
+ "CoxTime|14142|1": {
+  "c": 0.7913477469972557,
+  "ibs": 0.11666643846020028,
+  "inner_best": 0.8166543146972995,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 384.55361890792847,
+  "n_configs": 54
+ },
+ "CoxTime|14142|2": {
+  "c": 0.7789095646038193,
+  "ibs": 0.11626472291737976,
+  "inner_best": 0.8197229854162073,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 502.2209029197693,
+  "n_configs": 54
+ },
+ "CoxTime|14142|3": {
+  "c": 0.8015798757573434,
+  "ibs": 0.09710894015751205,
+  "inner_best": 0.8040444268964688,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 602.2866861820221,
+  "n_configs": 54
+ },
+ "CoxTime|14142|4": {
+  "c": 0.802432243501833,
+  "ibs": 0.12048064772861763,
+  "inner_best": 0.8026549192364171,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 513.2113933563232,
+  "n_configs": 54
+ },
+ "CoxTime|16180|0": {
+  "c": 0.7956192038447979,
+  "ibs": 0.09842292640651426,
+  "inner_best": 0.8082541579995444,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  "sec": 678.2592782974243,
+  "n_configs": 54
+ },
+ "CoxTime|16180|1": {
+  "c": 0.7717936831072502,
+  "ibs": 0.11919743963417437,
+  "inner_best": 0.8184819255227845,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 700.0658845901489,
+  "n_configs": 54
+ },
+ "CoxTime|16180|2": {
+  "c": 0.7949656633172827,
+  "ibs": 0.11389153962840755,
+  "inner_best": 0.8064767487163385,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 656.5528471469879,
+  "n_configs": 54
+ },
+ "CoxTime|16180|3": {
+  "c": 0.8026434050185584,
+  "ibs": 0.11465310813575515,
+  "inner_best": 0.7981179696507027,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 552.0576541423798,
+  "n_configs": 54
+ },
+ "CoxTime|16180|4": {
+  "c": 0.7943674868608748,
+  "ibs": 0.10975781988300216,
+  "inner_best": 0.8072779590834123,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 375.0385265350342,
+  "n_configs": 54
+ },
+ "CoxTime|27182|0": {
+  "c": 0.7996245136517321,
+  "ibs": 0.09551950507153051,
+  "inner_best": 0.801678577020452,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 689.6879072189331,
+  "n_configs": 54
+ },
+ "CoxTime|27182|1": {
+  "c": 0.7970908844018731,
+  "ibs": 0.09712051250220834,
+  "inner_best": 0.8039841037094295,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0,
+   "batch": 256
+  },
+  "sec": 577.3732168674469,
+  "n_configs": 54
+ },
+ "CoxTime|27182|2": {
+  "c": 0.7924881123066722,
+  "ibs": 0.11208864059264878,
+  "inner_best": 0.7932175468190679,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 435.4654245376587,
+  "n_configs": 54
+ },
+ "CoxTime|27182|3": {
+  "c": 0.7776917314270757,
+  "ibs": 0.1154554915221603,
+  "inner_best": 0.8213719886876824,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 475.30783891677856,
+  "n_configs": 54
+ },
+ "CoxTime|27182|4": {
+  "c": 0.7978500943190543,
+  "ibs": 0.0948978172823656,
+  "inner_best": 0.7960346762802758,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 524.3423442840576,
+  "n_configs": 54
+ },
+ "CoxTime|31415|0": {
+  "c": 0.7969006731693914,
+  "ibs": 0.1018162621776051,
+  "inner_best": 0.8073590852451806,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 849.8529379367828,
+  "n_configs": 54
+ },
+ "CoxTime|31415|1": {
+  "c": 0.782698545263853,
+  "ibs": 0.09286218934375162,
+  "inner_best": 0.8112845083791939,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 729.8595991134644,
+  "n_configs": 54
+ },
+ "CoxTime|31415|2": {
+  "c": 0.7939912039477566,
+  "ibs": 0.1086685518702029,
+  "inner_best": 0.8036533957845433,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 723.8287873268127,
+  "n_configs": 54
+ },
+ "CoxTime|31415|3": {
+  "c": 0.79866037199925,
+  "ibs": 0.09628188426203715,
+  "inner_best": 0.7999138658416538,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 650.6572389602661,
+  "n_configs": 54
+ },
+ "CoxTime|31415|4": {
+  "c": 0.7774039376496906,
+  "ibs": 0.10493017080916137,
+  "inner_best": 0.8137090968206414,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  "sec": 540.5174448490143,
+  "n_configs": 54
+ },
+ "DeepHit|14142|0": {
+  "c": 0.7829814489916892,
+  "ibs": 0.18576739288345037,
+  "inner_best": 0.8060135929568982,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 442.66081166267395,
+  "n_configs": 54
+ },
+ "DeepHit|14142|1": {
+  "c": 0.7840862387045764,
+  "ibs": 0.10560955309354102,
+  "inner_best": 0.81880529436287,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  "sec": 563.1191787719727,
+  "n_configs": 54
+ },
+ "DeepHit|14142|2": {
+  "c": 0.7730367368354396,
+  "ibs": 0.24376507493058164,
+  "inner_best": 0.8174552563040486,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 527.3384730815887,
+  "n_configs": 54
+ },
+ "DeepHit|14142|3": {
+  "c": 0.7998562006288826,
+  "ibs": 0.09653155091484848,
+  "inner_best": 0.8047539754747968,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  "sec": 490.2323818206787,
+  "n_configs": 54
+ },
+ "DeepHit|14142|4": {
+  "c": 0.8039921949067675,
+  "ibs": 0.18816041552793847,
+  "inner_best": 0.7998061674008811,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 458.4768760204315,
+  "n_configs": 54
+ },
+ "DeepHit|16180|0": {
+  "c": 0.804918233292324,
+  "ibs": 0.09679930315114557,
+  "inner_best": 0.807742267644683,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 670.7460117340088,
+  "n_configs": 54
+ },
+ "DeepHit|16180|1": {
+  "c": 0.7739778613743099,
+  "ibs": 0.11820627198815602,
+  "inner_best": 0.8177613483580507,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 723.153279542923,
+  "n_configs": 54
+ },
+ "DeepHit|16180|2": {
+  "c": 0.7925818840101727,
+  "ibs": 0.09665206721157195,
+  "inner_best": 0.8012868598410179,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 638.2909951210022,
+  "n_configs": 54
+ },
+ "DeepHit|16180|3": {
+  "c": 0.8001682992882836,
+  "ibs": 0.09467732193097957,
+  "inner_best": 0.7959198125901146,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 488.6184196472168,
+  "n_configs": 54
+ },
+ "DeepHit|16180|4": {
+  "c": 0.7888375137634466,
+  "ibs": 0.09989734303750368,
+  "inner_best": 0.8068071492905686,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 421.9395866394043,
+  "n_configs": 54
+ },
+ "DeepHit|27182|0": {
+  "c": 0.8019691795368435,
+  "ibs": 0.09492576477930184,
+  "inner_best": 0.8015367753714169,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  "sec": 619.1079919338226,
+  "n_configs": 54
+ },
+ "DeepHit|27182|1": {
+  "c": 0.7975447078645462,
+  "ibs": 0.10046395669614244,
+  "inner_best": 0.8023024248628842,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  "sec": 628.9091150760651,
+  "n_configs": 54
+ },
+ "DeepHit|27182|2": {
+  "c": 0.7890748626387061,
+  "ibs": 0.10537790119936519,
+  "inner_best": 0.7906139017159234,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 1.0
+  },
+  "sec": 509.349157333374,
+  "n_configs": 54
+ },
+ "DeepHit|27182|3": {
+  "c": 0.7772061411822047,
+  "ibs": 0.10119427835140897,
+  "inner_best": 0.8151590979759243,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 533.5005149841309,
+  "n_configs": 54
+ },
+ "DeepHit|27182|4": {
+  "c": 0.7981230982150475,
+  "ibs": 0.09702894710653229,
+  "inner_best": 0.8013799744191376,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 40,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 425.0823087692261,
+  "n_configs": 54
+ },
+ "DeepHit|31415|0": {
+  "c": 0.7924659980766589,
+  "ibs": 0.10449146120101753,
+  "inner_best": 0.8090771824378802,
+  "config": {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64,
+   "bins": 20,
+   "alpha": 0.5,
+   "sigma": 0.5
+  },
+  "sec": 862.7691044807434,
+  "n_configs": 54
+ },
+ "DeepHit|31415|1": {
+  "c": 0.7828345019131043,
+  "ibs": 0.10746906410623565,
+  "inner_best": 0.8123862904410518,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  "sec": 646.6650111675262,
+  "n_configs": 54
+ },
+ "DeepHit|31415|2": {
+  "c": 0.7953595210319281,
+  "ibs": 0.10827173183751186,
+  "inner_best": 0.804115925058548,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.8,
+   "sigma": 0.1
+  },
+  "sec": 710.2460086345673,
+  "n_configs": 54
+ },
+ "DeepHit|31415|3": {
+  "c": 0.8044079998960377,
+  "ibs": 0.12345127025039158,
+  "inner_best": 0.7978425444147564,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 606.4523589611053,
+  "n_configs": 54
+ },
+ "DeepHit|31415|4": {
+  "c": 0.7805261211313831,
+  "ibs": 0.12245818263711596,
+  "inner_best": 0.8123563018184352,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256,
+   "bins": 10,
+   "alpha": 0.2,
+   "sigma": 0.1
+  },
+  "sec": 696.0868635177612,
+  "n_configs": 54
+ },
+ "DeepSurv|14142|0": {
+  "c": 0.7881314125898607,
+  "ibs": 0.08859551577675195,
+  "inner_best": 0.8055318172693642,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 219.70084738731384,
+  "n_configs": 54
+ },
+ "DeepSurv|14142|1": {
+  "c": 0.7847128663237416,
+  "ibs": 0.0973597596268167,
+  "inner_best": 0.8178991616100793,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 252.28923273086548,
+  "n_configs": 54
+ },
+ "DeepSurv|14142|2": {
+  "c": 0.7769193888351139,
+  "ibs": 0.10048116289693934,
+  "inner_best": 0.8215437245588209,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 199.45931363105774,
+  "n_configs": 54
+ },
+ "DeepSurv|14142|3": {
+  "c": 0.8038538231459468,
+  "ibs": 0.09192274093932418,
+  "inner_best": 0.8086164374939202,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0,
+   "batch": 64
+  },
+  "sec": 274.856910943985,
+  "n_configs": 54
+ },
+ "DeepSurv|14142|4": {
+  "c": 0.8104454488373293,
+  "ibs": 0.09652967266341715,
+  "inner_best": 0.8006666666666666,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 282.1696741580963,
+  "n_configs": 54
+ },
+ "DeepSurv|16180|0": {
+  "c": 0.7958584245249761,
+  "ibs": 0.09730745128437845,
+  "inner_best": 0.8090796921556501,
+  "config": {
+   "hidden": [
+    128,
+    64
+   ],
+   "dropout": 0.0,
+   "lr": 0.0003,
+   "wd": 0.0,
+   "batch": 256
+  },
+  "sec": 342.14179825782776,
+  "n_configs": 54
+ },
+ "DeepSurv|16180|1": {
+  "c": 0.7745587208631168,
+  "ibs": 0.10124340369277532,
+  "inner_best": 0.8198732838693237,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 334.5580677986145,
+  "n_configs": 54
+ },
+ "DeepSurv|16180|2": {
+  "c": 0.7948630563678606,
+  "ibs": 0.11612763870213708,
+  "inner_best": 0.8075350789967959,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 310.23696541786194,
+  "n_configs": 54
+ },
+ "DeepSurv|16180|3": {
+  "c": 0.8025782186745049,
+  "ibs": 0.09224234488854645,
+  "inner_best": 0.7981208023273271,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  "sec": 227.4242706298828,
+  "n_configs": 54
+ },
+ "DeepSurv|16180|4": {
+  "c": 0.7934158698687411,
+  "ibs": 0.11218810296989792,
+  "inner_best": 0.8078569674000772,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 215.64467215538025,
+  "n_configs": 54
+ },
+ "DeepSurv|27182|0": {
+  "c": 0.8038702089622116,
+  "ibs": 0.08991050625972498,
+  "inner_best": 0.8031645401342979,
+  "config": {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 370.0182065963745,
+  "n_configs": 54
+ },
+ "DeepSurv|27182|1": {
+  "c": 0.799124156451172,
+  "ibs": 0.09654098461293868,
+  "inner_best": 0.8060198202078791,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 381.0010471343994,
+  "n_configs": 54
+ },
+ "DeepSurv|27182|2": {
+  "c": 0.7903540977578177,
+  "ibs": 0.09664911173071766,
+  "inner_best": 0.7918325091748166,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 311.26652669906616,
+  "n_configs": 54
+ },
+ "DeepSurv|27182|3": {
+  "c": 0.7710089987634597,
+  "ibs": 0.09972839092142785,
+  "inner_best": 0.8211706175873965,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 300.5334618091583,
+  "n_configs": 54
+ },
+ "DeepSurv|27182|4": {
+  "c": 0.7933474258955571,
+  "ibs": 0.09441332114482648,
+  "inner_best": 0.8026358149476926,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 246.42223024368286,
+  "n_configs": 54
+ },
+ "DeepSurv|31415|0": {
+  "c": 0.7951458533681367,
+  "ibs": 0.12096822011397663,
+  "inner_best": 0.8057172176207579,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 316.3216435909271,
+  "n_configs": 54
+ },
+ "DeepSurv|31415|1": {
+  "c": 0.7919921533591003,
+  "ibs": 0.08867642023969667,
+  "inner_best": 0.8120642310691241,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 387.5059530735016,
+  "n_configs": 54
+ },
+ "DeepSurv|31415|2": {
+  "c": 0.7952738822714445,
+  "ibs": 0.11145676968957167,
+  "inner_best": 0.8051463700234192,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 366.3689110279083,
+  "n_configs": 54
+ },
+ "DeepSurv|31415|3": {
+  "c": 0.8037248193191586,
+  "ibs": 0.09270937341203055,
+  "inner_best": 0.8001160174377725,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.0001,
+   "batch": 256
+  },
+  "sec": 314.6928279399872,
+  "n_configs": 54
+ },
+ "DeepSurv|31415|4": {
+  "c": 0.7825728659094908,
+  "ibs": 0.10288116401802054,
+  "inner_best": 0.8137003878399406,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 352.9472427368164,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|27182|0": {
+  "c": 0.805131269196716,
+  "ibs": 0.09060492718460213,
+  "inner_best": 0.8016519892112579,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 415.3111763000488,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|27182|1": {
+  "c": 0.8024420705070138,
+  "ibs": 0.09545940958688358,
+  "inner_best": 0.8069934237506159,
+  "config": {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 340.91237592697144,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|27182|2": {
+  "c": 0.7903540977578177,
+  "ibs": 0.09664911322082156,
+  "inner_best": 0.7918325091748166,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 238.29690027236938,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|27182|3": {
+  "c": 0.7715992887637305,
+  "ibs": 0.09951321726670716,
+  "inner_best": 0.8206375764395812,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.0,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 270.6870493888855,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|27182|4": {
+  "c": 0.7933474258955571,
+  "ibs": 0.09441331518559365,
+  "inner_best": 0.8026358149476926,
+  "config": {
+   "hidden": [
+    256,
+    128
+   ],
+   "dropout": 0.1,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 247.48858189582825,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|31415|0": {
+  "c": 0.7951458533681367,
+  "ibs": 0.12096822136365809,
+  "inner_best": 0.8057172176207579,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 448.91364574432373,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|31415|1": {
+  "c": 0.7919882688834075,
+  "ibs": 0.0886543490493097,
+  "inner_best": 0.8120642310691241,
+  "config": {
+   "hidden": [
+    64,
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 499.07972860336304,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|31415|2": {
+  "c": 0.7952738822714445,
+  "ibs": 0.1114567635171,
+  "inner_best": 0.8051463700234192,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.3,
+   "lr": 0.001,
+   "wd": 0.01,
+   "batch": 64
+  },
+  "sec": 411.4510202407837,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|31415|3": {
+  "c": 0.8012687108865196,
+  "ibs": 0.09302317286111515,
+  "inner_best": 0.8002507851685182,
+  "config": {
+   "hidden": [
+    128,
+    64,
+    32
+   ],
+   "dropout": 0.1,
+   "lr": 0.003,
+   "wd": 0.01,
+   "batch": 256
+  },
+  "sec": 288.541761636734,
+  "n_configs": 54
+ },
+ "DeepSurv (library defaults)|31415|4": {
+  "c": 0.7824777102312104,
+  "ibs": 0.10288788154924718,
+  "inner_best": 0.8137003878399406,
+  "config": {
+   "hidden": [
+    32
+   ],
+   "dropout": 0.0,
+   "lr": 0.003,
+   "wd": 0.0001,
+   "batch": 64
+  },
+  "sec": 292.30392575263977,
+  "n_configs": 54
+ },
+ "TexGISa|14142|0": {
+  "c": 0.7923245849594805,
+  "ibs": 0.0881389481812903,
+  "inner_best": 0.8079435634194603,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 404.59976720809937,
+  "n_configs": 54
+ },
+ "TexGISa|14142|1": {
+  "c": 0.7903340846721355,
+  "ibs": 0.09747948411507239,
+  "inner_best": 0.8207883644448561,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 375.97530794143677,
+  "n_configs": 54
+ },
+ "TexGISa|14142|2": {
+  "c": 0.7790922989244005,
+  "ibs": 0.09906358054794882,
+  "inner_best": 0.8222022897806173,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 441.47635889053345,
+  "n_configs": 54
+ },
+ "TexGISa|14142|3": {
+  "c": 0.8057002070710944,
+  "ibs": 0.09140471219032158,
+  "inner_best": 0.8077123352731476,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  "sec": 490.4700882434845,
+  "n_configs": 54
+ },
+ "TexGISa|14142|4": {
+  "c": 0.8095311785726356,
+  "ibs": 0.09684594841579165,
+  "inner_best": 0.8048869309838473,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  "sec": 536.6116590499878,
+  "n_configs": 54
+ },
+ "TexGISa|16180|0": {
+  "c": 0.8048984481232868,
+  "ibs": 0.09659358499577063,
+  "inner_best": 0.8090412264064409,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  "sec": 577.6690797805786,
+  "n_configs": 54
+ },
+ "TexGISa|16180|1": {
+  "c": 0.7741592654417921,
+  "ibs": 0.10118754918528243,
+  "inner_best": 0.8213583758307874,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 508.51448464393616,
+  "n_configs": 54
+ },
+ "TexGISa|16180|2": {
+  "c": 0.7958817967942657,
+  "ibs": 0.0945002308700571,
+  "inner_best": 0.8087416918165483,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  "sec": 518.0066363811493,
+  "n_configs": 54
+ },
+ "TexGISa|16180|3": {
+  "c": 0.8014423960129662,
+  "ibs": 0.09306104858794588,
+  "inner_best": 0.8007778530010793,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  "sec": 352.97869086265564,
+  "n_configs": 54
+ },
+ "TexGISa|16180|4": {
+  "c": 0.7948953221308653,
+  "ibs": 0.09027486317345436,
+  "inner_best": 0.8081698658338304,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  "sec": 405.02983927726746,
+  "n_configs": 54
+ },
+ "TexGISa|27182|0": {
+  "c": 0.8039381702922148,
+  "ibs": 0.09071930548152322,
+  "inner_best": 0.8028927536403142,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.003
+  },
+  "sec": 802.6328082084656,
+  "n_configs": 54
+ },
+ "TexGISa|27182|1": {
+  "c": 0.8002158341507516,
+  "ibs": 0.09671015916961877,
+  "inner_best": 0.8064889200966523,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 616.9610941410065,
+  "n_configs": 54
+ },
+ "TexGISa|27182|2": {
+  "c": 0.7950798348339244,
+  "ibs": 0.0960039071754181,
+  "inner_best": 0.7947520895450815,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.9,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.001
+  },
+  "sec": 501.2750494480133,
+  "n_configs": 54
+ },
+ "TexGISa|27182|3": {
+  "c": 0.7800528914281588,
+  "ibs": 0.098508802199434,
+  "inner_best": 0.819929816248871,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  "sec": 570.4962947368622,
+  "n_configs": 54
+ },
+ "TexGISa|27182|4": {
+  "c": 0.798962964367304,
+  "ibs": 0.09352770549978834,
+  "inner_best": 0.7999530147423497,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 0.3,
+   "es_metric": "loss",
+   "hidden": [
+    256,
+    128
+   ],
+   "lr": 0.001
+  },
+  "sec": 381.5868761539459,
+  "n_configs": 54
+ },
+ "TexGISa|31415|0": {
+  "c": 0.7987489123963915,
+  "ibs": 0.1001675230113854,
+  "inner_best": 0.8073297661804588,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 571.2154669761658,
+  "n_configs": 54
+ },
+ "TexGISa|31415|1": {
+  "c": 0.7935517703497971,
+  "ibs": 0.08898571263587184,
+  "inner_best": 0.8133750692145142,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": false,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 555.023074388504,
+  "n_configs": 54
+ },
+ "TexGISa|31415|2": {
+  "c": 0.7936619704907862,
+  "ibs": 0.09122099039702576,
+  "inner_best": 0.8054859484777518,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "resnet",
+   "ema_decay": 0.9,
+   "input_noise": 0.05,
+   "input_gate": false,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    64,
+    32
+   ],
+   "lr": 0.003
+  },
+  "sec": 610.2452964782715,
+  "n_configs": 54
+ },
+ "TexGISa|31415|3": {
+  "c": 0.8064928145368946,
+  "ibs": 0.09162869462305134,
+  "inner_best": 0.7999812497070267,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 512,
+   "lambda_cox": 1.0,
+   "es_metric": "loss",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.003
+  },
+  "sec": 460.6215341091156,
+  "n_configs": 54
+ },
+ "TexGISa|31415|4": {
+  "c": 0.7851456600033754,
+  "ibs": 0.1015746181268378,
+  "inner_best": 0.8150676978099817,
+  "config": {
+   "dropout": 0.2,
+   "wd": 0.01,
+   "bins": 20,
+   "likelihood": "pch",
+   "calibrate": true,
+   "norm": "layer",
+   "activation": "selu",
+   "binning": "quantile",
+   "arch": "mlp",
+   "ema_decay": 0.99,
+   "input_noise": 0.1,
+   "input_gate": true,
+   "batch": 128,
+   "lambda_cox": 1.0,
+   "es_metric": "cindex",
+   "hidden": [
+    128,
+    128
+   ],
+   "lr": 0.001
+  },
+  "sec": 614.2885828018188,
+  "n_configs": 54
+ }
+}
